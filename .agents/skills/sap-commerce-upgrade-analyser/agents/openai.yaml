@@ -1,0 +1,4 @@
+interface:
+  display_name: "SAP Commerce Upgrade Analyser"
+  short_description: "Assess SAP Commerce upgrade impact and risk."
+  default_prompt: "Use $sap-commerce-upgrade-analyser to analyze this SAP Commerce upgrade from the current version to the target version and classify required changes."

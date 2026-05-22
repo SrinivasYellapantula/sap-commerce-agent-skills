@@ -1,0 +1,4 @@
+interface:
+  display_name: "SAP Commerce Project Analyser"
+  short_description: "Map SAP Commerce backend and storefront architecture."
+  default_prompt: "Use $sap-commerce-project-analyser to analyze this SAP Commerce project and produce an evidence-based architecture report."
