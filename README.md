@@ -4,7 +4,7 @@ Reusable agent skills for SAP Commerce project analysis and upgrade work.
 
 ## Included skills
 
-- `sap-commerce-project-analyser` maps a Commerce backend and storefront baseline from repository evidence.
+- `sap-commerce-project-analyser` produces an evidence-based SAP Commerce architecture analysis covering the solution map, backend and storefront structure, critical flows, integrations, risks, change impact, and upgrade baseline.
 - `sap-commerce-upgrade-analyser` compares a project baseline with official upgrade guidance and produces an applicability matrix.
 - `sap-commerce-upgrade-implementer` turns an approved upgrade analysis into a decision pack and gated implementation work.
 
