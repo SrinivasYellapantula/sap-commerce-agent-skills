@@ -1,6 +1,6 @@
 ---
 name: sap-commerce-project-analyser
-description: Analyze SAP Commerce projects and their composable storefront or Spartacus counterparts. Use when Codex needs an evidence-based enterprise architecture report, project comprehension brief, extension or data-model inventory, B2B or B2C posture, critical-flow and OCC contract analysis, OOTB-vs-custom review, integration map, risk register, change-impact matrix, onboarding brief, upgrade baseline, or project comparison.
+description: Analyze SAP Commerce projects and their composable storefront or Spartacus counterparts. Use when Codex needs a staged large-repository scan, evidence-based enterprise architecture report, project comprehension brief, extension or data-model inventory, B2B or B2C posture, critical-flow and OCC contract analysis, OOTB-vs-custom review, integration map, risk register, Markdown plus JSON handoff, change-impact matrix, onboarding brief, upgrade baseline, or project comparison.
 ---
 
 # SAP Commerce Project Analyser
@@ -8,6 +8,15 @@ description: Analyze SAP Commerce projects and their composable storefront or Sp
 ## Overview
 
 Produce a read-only, evidence-based project map that a Commerce engineer can reuse for onboarding, change decisions, and upgrade work. Read the project like an SAP CX architect before diving into isolated classes: understand the business shape, channels, data ownership, integrations, runtime risks, and operability. Treat the backend and storefront as separate roots when the frontend source is not colocated with the Commerce repository.
+
+## Large Repo Strategy
+
+SAP Commerce repositories are often too large for a direct full read. Start with a compact quick scan before deep analysis:
+
+1. Index high-signal files and folders: `localextensions.xml`, manifests, build files, custom extension names, `items.xml`, Spring XML, impex/data folders, OCC controllers, cronjobs, process definitions, integration config, storefront `package.json`, Angular config, CMS mappings, and deployment files.
+2. Produce a small evidence ledger with confirmed versions, roots, custom extensions, likely business flows, integration clues, and missing inputs.
+3. Deep-dive only into high-signal or high-risk areas: checkout, pricing, stock, order submission, ERP/PIM/payment integrations, B2B authorization, Solr, CMS/SmartEdit, Backoffice operations, and upgrade hotspots.
+4. Keep the final report evidence-driven; mark broad areas as `unassessed` instead of reading the whole repo indiscriminately.
 
 ## Workflow
 
@@ -57,6 +66,7 @@ Produce a read-only, evidence-based project map that a Commerce engineer can reu
    - Read the relevant parts of [references/project-analysis-playbook.md](references/project-analysis-playbook.md) for deep inspection checklists, search terms, smell lists, the first-two-days sequence, and the expected architect artifacts.
    - Use tables and Mermaid diagrams for extension groups, version baselines, data maps, integration edges, critical flows, OCC contracts, OOTB-vs-custom comparisons, risk registers, and change-impact matrices when evidence supports them.
    - Distinguish confirmed findings, inferences, unknowns, unassessed areas, and next files to inspect.
+   - End the human-readable Markdown report with a valid JSON handoff for `$sap-commerce-upgrade-analyser`.
 
 ## Evidence Rules
 
@@ -66,11 +76,12 @@ Produce a read-only, evidence-based project map that a Commerce engineer can reu
 - Treat environment property files as potentially sensitive.
 - Do not expose secrets, tokens, passwords, OAuth credentials, private endpoint credentials, or sensitive request/response payloads. Name sensitive files only when that helps the user review them.
 - Do not treat a quick text-search miss as proof that a feature, integration, or flow is absent.
+- Do not hardcode company-specific, customer-specific, or project-specific details into the skill itself. Use only evidence from the current project being analyzed.
 - Keep a compact evidence ledger while working so the upgrade analyser can reuse it.
 
 ## Output Handoff
 
-End with a compact upgrade baseline:
+End with a compact upgrade baseline in Markdown and a machine-readable JSON block. The JSON must be valid JSON with no comments, no trailing commas, no secrets, and no private endpoint credentials.
 
 | Field | Value | Evidence |
 |---|---|---|
@@ -80,3 +91,41 @@ End with a compact upgrade baseline:
 | High-risk custom areas | | |
 | Integration families | | |
 | Missing inputs for upgrade analysis | | |
+
+Use this JSON shape as the final block when enough evidence exists:
+
+```json
+{
+  "schema_version": "sap-commerce-project-analysis-handoff/v1",
+  "project_roots": {
+    "backend": "",
+    "storefront": "",
+    "evidence_status": "confirmed|partial|unknown"
+  },
+  "baseline": {
+    "sap_commerce_version": "",
+    "storefront_version": "",
+    "java_version": "",
+    "node_version": "",
+    "angular_version": "",
+    "deployment_model": "ccv2|local|on-prem|private-cloud|hybrid|unknown"
+  },
+  "posture": {
+    "business_model": "b2b|b2c|b2b2c|marketplace|dealer-portal|punchout|mixed|unknown",
+    "customization_intensity": "low|medium|high|very-high|unknown",
+    "integration_intensity": "low|medium|high|very-high|unknown",
+    "change_safety": "safe|moderate|risky|fragile|unknown"
+  },
+  "extensions": [],
+  "integrations": [],
+  "critical_flows": [],
+  "custom_hotspots": [],
+  "risks": [],
+  "upgrade_baseline": {
+    "high_risk_custom_areas": [],
+    "integration_families": [],
+    "missing_inputs": []
+  },
+  "next_inspection_steps": []
+}
+```

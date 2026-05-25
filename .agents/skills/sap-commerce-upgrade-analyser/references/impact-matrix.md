@@ -1,12 +1,17 @@
 # Upgrade Impact Matrix
 
-Use one row per SAP-documented change, grouped by workstream.
+Use one row per SAP-documented change or required operational activity, grouped by workstream.
 
 | Workstream | SAP change or step | Official source | Project evidence | Applicability | Complexity | Reasoning | Suggested action |
 |---|---|---|---|---|---|---|---|
 | Backend | | | | required | straightforward | | |
 | Storefront | | | | needs evidence | complex | | |
 | Integration | | | | not needed | straightforward | | |
+| CCv2 deployment | | | | needs evidence | moderate | | |
+| Local/on-prem operations | | | | needs evidence | moderate | | |
+| Data/system update | | | | needs evidence | complex | | |
+| Solr/media/indexing | | | | needs evidence | moderate | | |
+| Testing/rollback | | | | recommended | moderate | | |
 
 ## Classification Guide
 
@@ -30,4 +35,38 @@ Use one row per SAP-documented change, grouped by workstream.
 2. Required changes by workstream.
 3. Complex changes requiring a decision.
 4. Changes marked not needed and the evidence.
-5. Test and rollback considerations.
+5. Non-code upgrade activities, including system update, impex/data migration, Solr reindexing, media migration, environment configuration, deployment sequencing, smoke tests, and rollback.
+6. Test and rollback considerations.
+
+## JSON Handoff
+
+End with a valid JSON block for the implementer:
+
+```json
+{
+  "schema_version": "sap-commerce-upgrade-analysis-handoff/v1",
+  "baseline": {
+    "current_backend_version": "",
+    "target_backend_version": "",
+    "current_storefront_version": "",
+    "target_storefront_version": "",
+    "deployment_scope": ["ccv2", "local-on-prem"]
+  },
+  "documentation_sources": [],
+  "required_changes": [],
+  "complex_decisions": [],
+  "not_needed_changes": [],
+  "non_code_activities": {
+    "system_update": [],
+    "data_migration": [],
+    "impex": [],
+    "solr_reindexing": [],
+    "media_migration": [],
+    "deployment": [],
+    "smoke_tests": [],
+    "rollback": []
+  },
+  "missing_evidence": [],
+  "implementation_inputs": []
+}
+```

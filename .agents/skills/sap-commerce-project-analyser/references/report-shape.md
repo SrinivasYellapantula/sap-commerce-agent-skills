@@ -945,6 +945,49 @@ Before making significant changes, the team should first inspect `<priority area
 
 ---
 
+## 31. Machine-Readable JSON Handoff
+
+After the Markdown report, include a final JSON block for the next skill or agent. The JSON must be valid, compact, and evidence-based. Do not include comments, trailing commas, secrets, credentials, private endpoint values, or sensitive payloads.
+
+```json
+{
+  "schema_version": "sap-commerce-project-analysis-handoff/v1",
+  "project_roots": {
+    "backend": "",
+    "storefront": "",
+    "evidence_status": "confirmed|partial|unknown"
+  },
+  "baseline": {
+    "sap_commerce_version": "",
+    "storefront_version": "",
+    "java_version": "",
+    "node_version": "",
+    "angular_version": "",
+    "deployment_model": "ccv2|local|on-prem|private-cloud|hybrid|unknown"
+  },
+  "posture": {
+    "business_model": "b2b|b2c|b2b2c|marketplace|dealer-portal|punchout|mixed|unknown",
+    "customization_intensity": "low|medium|high|very-high|unknown",
+    "integration_intensity": "low|medium|high|very-high|unknown",
+    "change_safety": "safe|moderate|risky|fragile|unknown"
+  },
+  "extensions": [],
+  "integrations": [],
+  "critical_flows": [],
+  "custom_hotspots": [],
+  "risks": [],
+  "change_impact": [],
+  "upgrade_baseline": {
+    "high_risk_custom_areas": [],
+    "integration_families": [],
+    "missing_inputs": []
+  },
+  "next_inspection_steps": []
+}
+```
+
+---
+
 # Diagram Quality Guidelines
 
 Good architecture diagrams should:
