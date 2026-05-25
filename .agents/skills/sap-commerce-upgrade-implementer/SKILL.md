@@ -1,6 +1,6 @@
 ---
 name: sap-commerce-upgrade-implementer
-description: Prepare and carry out SAP Commerce upgrade implementation work with explicit human review gates. Use when Codex must turn a Markdown or JSON upgrade analysis into a documented change plan covering code and non-code upgrade activities, compare approaches for complex customizations, explain reasoning and risks, wait for final approval before touching code or configuration, then implement and verify only the approved SAP Commerce or composable storefront changes.
+description: Prepare and carry out SAP Commerce upgrade implementation work with explicit human review gates. Use to turn a Markdown or JSON upgrade analysis into a documented change plan covering code and non-code upgrade activities, compare approaches for complex customizations, explain reasoning and risks, wait for final approval before touching code or configuration, then implement and verify only the approved SAP Commerce or composable storefront changes.
 ---
 
 # SAP Commerce Upgrade Implementer

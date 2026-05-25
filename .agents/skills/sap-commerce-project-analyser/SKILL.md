@@ -1,6 +1,6 @@
 ---
 name: sap-commerce-project-analyser
-description: Analyze SAP Commerce projects and their composable storefront or Spartacus counterparts. Use when Codex needs a staged large-repository scan, evidence-based enterprise architecture report, project comprehension brief, extension or data-model inventory, B2B or B2C posture, critical-flow and OCC contract analysis, OOTB-vs-custom review, integration map, risk register, Markdown plus JSON handoff, change-impact matrix, onboarding brief, upgrade baseline, or project comparison.
+description: Analyze SAP Commerce projects and their composable storefront or Spartacus counterparts. Use for staged large-repository scans, evidence-based enterprise architecture reports, project comprehension briefs, extension or data-model inventories, B2B or B2C posture, critical-flow and OCC contract analysis, OOTB-vs-custom reviews, integration maps, risk registers, Markdown plus JSON handoffs, change-impact matrices, onboarding briefs, upgrade baselines, or project comparisons.
 ---
 
 # SAP Commerce Project Analyser

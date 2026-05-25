@@ -1,6 +1,6 @@
 ---
 name: sap-commerce-upgrade-analyser
-description: Analyze SAP Commerce upgrade impact from a current backend and storefront version to a target version. Use when Codex needs to use public SAP docs plus user-provided authorized SAP notes or PDFs, compare required code and non-code upgrade activities against a project baseline, cover CCv2 and local/on-prem workflows, classify applicability and complexity, identify missing evidence, and produce a Markdown plus JSON upgrade decision brief without implementing code.
+description: Analyze SAP Commerce upgrade impact from a current backend and storefront version to a target version. Use for upgrade analysis that combines public SAP docs plus user-provided authorized SAP notes or PDFs, compares required code and non-code upgrade activities against a project baseline, covers CCv2 and local/on-prem workflows, classifies applicability and complexity, identifies missing evidence, and produces a Markdown plus JSON upgrade decision brief without implementing code.
 ---
 
 # SAP Commerce Upgrade Analyser
