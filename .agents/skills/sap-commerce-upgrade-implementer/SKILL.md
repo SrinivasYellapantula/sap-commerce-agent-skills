@@ -1,13 +1,13 @@
 ---
 name: sap-commerce-upgrade-implementer
-description: Prepare and carry out SAP Commerce upgrade implementation work with explicit human review gates. Use to turn a Markdown or JSON upgrade analysis into a documented change plan covering code and non-code upgrade activities, compare approaches for complex customizations, explain reasoning and risks, wait for final approval before touching code or configuration, then implement and verify only the approved SAP Commerce or composable storefront changes.
+description: Prepare and carry out SAP Commerce upgrade implementation work with explicit human review gates. Use to turn a Markdown or JSON upgrade analysis into a documented change plan covering code, SAP-provided migration tools such as OpenRewrite, and non-code upgrade activities; default tooling to dry-run first; compare approaches for complex customizations; explain reasoning and risks; wait for approval before touching code, configuration, or running local commands; then implement and verify only approved SAP Commerce or composable storefront changes.
 ---
 
 # SAP Commerce Upgrade Implementer
 
 ## Overview
 
-Convert an approved upgrade analysis into an implementation decision pack first, and code or configuration changes only after the user explicitly gives final approval to apply them. Treat SAP Commerce upgrades as code plus operational work: CCv2 deployment steps, local/on-prem system update steps, impex/data migration, Solr indexing, media migration, environment configuration, smoke testing, and rollback may all be in scope when approved.
+Convert an approved upgrade analysis into an implementation decision pack first, and code, configuration, tool execution, or local command changes only after the user explicitly approves that scope. Treat SAP Commerce upgrades as code plus operational work: SAP-provided migration tooling, CCv2 deployment steps, local/on-prem system update steps, impex/data migration, Solr indexing, media migration, environment configuration, smoke testing, and rollback may all be in scope when approved.
 
 ## Approval State Machine
 
@@ -29,12 +29,22 @@ Convert an approved upgrade analysis into an implementation decision pack first,
    - Keep a change log mapped back to the approved decision pack.
    - Verify with the narrowest meaningful build/tests first and broaden when shared behavior or contracts changed.
 
+## Tooling And Command Gates
+
+- Automated migration tools such as SAP-provided OpenRewrite recipes are allowed only when the relevant artifact and instructions are provided or publicly documented for the current upgrade path.
+- Default every migration tool to dry-run first. Present the dry-run command, expected output, changed file families, and rollback approach before asking to apply changes.
+- Apply tool-generated changes only after explicit approval for the apply step. After applying, review the diff; do not assume generated changes are correct.
+- Implement remaining manual fixes after tool output has been reviewed and approved.
+- Local commands such as `ant clean all`, `ant updatesystem`, Solr indexing, impex imports, or test suites may be run only with explicit approval in a local/dev project context. For shared, staging, or production environments, prepare runbook steps unless the user has provided a safe execution context and explicit approval.
+- For CCv2, prepare deployment/update instructions by default. Edit manifest, deployment, or environment configuration files only when approved. Do not trigger cloud deployments unless the user explicitly provides an appropriate authenticated workflow and approval.
+
 ## Decision Workflow
 
 1. Read the upgrade matrix and re-check the code hotspots it cites.
 2. Split work into mechanical changes, design decisions, data/deployment actions, integration contract actions, and test actions.
    - Keep CCv2 actions separate from local/on-prem actions.
    - Keep code changes separate from system update, impex/data migration, Solr reindex, media migration, environment configuration, and smoke-test actions.
+   - Keep automated tool dry-run, automated tool apply, and manual patch work as separate approval items.
 3. For each complex change, provide:
    - why SAP or project evidence makes it relevant;
    - candidate approaches;
@@ -51,6 +61,7 @@ Convert an approved upgrade analysis into an implementation decision pack first,
 - Do not implement changes that the analyser marked `not needed` unless the user explicitly overrides that conclusion.
 - Preserve user changes in dirty worktrees and report conflicts or scope drift.
 - Prefer project patterns and official migration steps over invented rewrites.
+- Prefer SAP-provided migration tooling for broad mechanical framework changes, such as JDK 21 or Spring 6 updates, when the tool artifact and instructions are available. Use tooling to accelerate bulk changes, then review and complete manual fixes.
 - Keep integration payload, data migration, and storefront/backend compatibility decisions explicit.
 - Do not ask for or store SAP credentials, cookies, tokens, or partner-only documents. Use only public SAP docs and authorized user-provided docs for the current task.
 - Do not hardcode company-specific, customer-specific, or project-specific details into the skill itself. Use only evidence from the current project being upgraded.

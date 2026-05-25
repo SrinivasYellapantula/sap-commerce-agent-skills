@@ -7,6 +7,7 @@ Use one row per SAP-documented change or required operational activity, grouped 
 | Backend | | | | required | straightforward | | |
 | Storefront | | | | needs evidence | complex | | |
 | Integration | | | | not needed | straightforward | | |
+| Automated tooling | | | | needs evidence | moderate | | |
 | CCv2 deployment | | | | needs evidence | moderate | | |
 | Local/on-prem operations | | | | needs evidence | moderate | | |
 | Data/system update | | | | needs evidence | complex | | |
@@ -35,8 +36,9 @@ Use one row per SAP-documented change or required operational activity, grouped 
 2. Required changes by workstream.
 3. Complex changes requiring a decision.
 4. Changes marked not needed and the evidence.
-5. Non-code upgrade activities, including system update, impex/data migration, Solr reindexing, media migration, environment configuration, deployment sequencing, smoke tests, and rollback.
-6. Test and rollback considerations.
+5. Automation/tooling candidates, including SAP-provided OpenRewrite recipes or migration tools, dry-run commands, apply commands, expected changed files, and manual review requirements.
+6. Non-code upgrade activities, including system update, impex/data migration, Solr reindexing, media migration, environment configuration, deployment sequencing, smoke tests, and rollback.
+7. Test and rollback considerations.
 
 ## JSON Handoff
 
@@ -53,6 +55,8 @@ End with a valid JSON block for the implementer:
     "deployment_scope": ["ccv2", "local-on-prem"]
   },
   "documentation_sources": [],
+  "tool_artifacts": [],
+  "automation_candidates": [],
   "required_changes": [],
   "complex_decisions": [],
   "not_needed_changes": [],

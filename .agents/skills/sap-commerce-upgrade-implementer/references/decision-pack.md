@@ -17,9 +17,11 @@ Use this document shape before code changes.
 | ID | Workstream | Change | Applicability | Complexity | Candidate files | Verification |
 |---|---|---|---|---|---|---|
 | C-01 | Backend | | required | straightforward | | |
-| C-02 | CCv2 deployment | | needs evidence | moderate | | |
-| C-03 | Local/on-prem operations | | needs evidence | moderate | | |
-| C-04 | Data/system update | | needs evidence | complex | | |
+| C-02 | Automated tooling dry-run | | needs evidence | moderate | | |
+| C-03 | Automated tooling apply | | needs evidence | moderate | | |
+| C-04 | CCv2 deployment | | needs evidence | moderate | | |
+| C-05 | Local/on-prem operations | | needs evidence | moderate | | |
+| C-06 | Data/system update | | needs evidence | complex | | |
 
 ## Decision Table
 
@@ -36,6 +38,14 @@ List:
 2. payload/endpoint/auth changes for SAP and external systems;
 3. backward compatibility or deployment sequencing constraints.
 
+## Automated Migration Tools
+
+Use this section for SAP-provided tools such as OpenRewrite recipes for JDK 21/Spring framework updates.
+
+| Tool / Recipe | Artifact or Source | Purpose | Dry-Run Command | Apply Command | Expected Files | Manual Review Needed | Rollback |
+|---|---|---|---|---|---|---|---|
+| OpenRewrite |  | JDK/Spring migration |  |  |  |  |  |
+
 ## Operational Upgrade Actions
 
 Separate code work from operational work.
@@ -48,6 +58,8 @@ Separate code work from operational work.
 | Media migration | | | | | |
 | Environment configuration | | | | | |
 | Smoke tests | | | | | |
+| Local build/update command | | local/dev only | explicit approval required | | |
+| CCv2 manifest/config edit | | CCv2 | explicit approval required | | |
 
 ## Verification Plan
 
@@ -78,6 +90,11 @@ End with a valid JSON block:
   "approval_state": "analysis_received|decision_pack_proposed|approach_chosen|final_implementation_approval|implemented",
   "selected_decisions": [],
   "approved_scope": [],
+  "tooling": {
+    "dry_runs": [],
+    "applied_tools": [],
+    "manual_review_findings": []
+  },
   "code_changes": [],
   "non_code_actions": [],
   "verification": [],

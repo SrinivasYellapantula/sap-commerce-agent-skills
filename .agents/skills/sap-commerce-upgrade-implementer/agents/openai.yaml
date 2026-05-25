@@ -1,4 +1,4 @@
 interface:
   display_name: "SAP Commerce Upgrade Implementer"
   short_description: "Plan approved upgrade code and operations."
-  default_prompt: "Use $sap-commerce-upgrade-implementer to prepare the approved SAP Commerce upgrade decision pack, including code and non-code actions, before making changes."
+  default_prompt: "Use $sap-commerce-upgrade-implementer to prepare the approved SAP Commerce upgrade decision pack, dry-run migration tools first, and separate code from non-code actions."
