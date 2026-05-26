@@ -34,6 +34,7 @@ Convert an approved upgrade analysis into an implementation decision pack first,
 - Automated migration tools such as SAP-provided OpenRewrite recipes are allowed only when the relevant artifact and instructions are provided or publicly documented for the current upgrade path.
 - Default every migration tool to dry-run first. Present the dry-run command, expected output, changed file families, and rollback approach before asking to apply changes.
 - Apply tool-generated changes only after explicit approval for the apply step. After applying, review the diff; do not assume generated changes are correct.
+- Treat OpenRewrite as a source transformation aid, not a complete upgrade implementation. It usually will not update CCv2 manifests, runtime pins, README setup docs, CI images, Solr version policy, environment properties, data, or deployment topology.
 - Implement remaining manual fixes after tool output has been reviewed and approved.
 - Local commands such as `ant clean all`, `ant updatesystem`, Solr indexing, impex imports, or test suites may be run only with explicit approval in a local/dev project context. For shared, staging, or production environments, prepare runbook steps unless the user has provided a safe execution context and explicit approval.
 - For CCv2, prepare deployment/update instructions by default. Edit manifest, deployment, or environment configuration files only when approved. Do not trigger cloud deployments unless the user explicitly provides an appropriate authenticated workflow and approval.
@@ -54,6 +55,20 @@ Convert an approved upgrade analysis into an implementation decision pack first,
    - the exact decision needed from the human reviewer.
 4. For straightforward work, describe the intended patch set and verification without inflating it into a design debate.
 5. Keep rejected and deferred approaches visible in the pack so the reasoning survives project switching.
+6. After any migration-tool dry-run or apply, create a concrete residual patch list. Do not leave SAP Help items as broad workstreams when the required file-level changes can be inferred.
+
+## JDK21 / Spring 6 Upgrade Guardrails
+
+When the target is a JDK21/Spring 6 SAP Commerce line, always make a post-tool configuration pass against current public SAP Help plus the project ledger. Include these checks even when OpenRewrite succeeds:
+
+- Version/runtime pins: `manifest.json` or equivalent Commerce version, compatible extension packs, `.sdkmanrc`, CI/container Java settings, and setup documentation. Use exact runtime pins where the tool expects exact versions; keep placeholders only in human-facing examples.
+- OAuth deployment model: replace legacy deployable `oauth2` webapps with the SAP-documented `authorizationserver` and `resourceserver` webapps where applicable, and verify related extensions/config such as `oauth2commons`, OAuth clients, token flows, PKCE, and custom token granters.
+- CCv2 aspect scheduling: make an explicit aspect-by-aspect decision for `task.auxiliaryTables.scheduler.enabled`. Prefer scheduler-capable background processing only when that matches the project topology; disable it on user-facing or admin aspects when approved.
+- Solr alignment: re-check SAP Help update-release and Solr validity pages for the target. Do not assume an existing Solr minor is still the preferred target. Align the manifest Solr version, configset `luceneMatchVersion`, custom Solr config, and the required reindex plan.
+- Integration Extension Pack: verify the target compatible integration pack from SAP Help Update Releases and update it separately from the base Commerce version.
+- Third-party and autoloaded extensions: inspect `localextensions.xml` paths, autoloaded folders, inactive custom modules, untracked vendored code, and nested `.git` directories. Decide whether each is in scope, vendored, submodule-managed, or accidental before applying upgrade conclusions.
+- Documentation consistency: update project setup docs when runtime or command expectations change, but keep docs separate from executable config in the change log.
+- Parse warnings and skipped files: treat parser warnings, inactive extensions, generated Gradle metadata, and untracked files as manual review inputs, not as harmless noise.
 
 ## Implementation Rules
 
