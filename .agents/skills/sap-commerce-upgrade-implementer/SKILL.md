@@ -1,6 +1,6 @@
 ---
 name: sap-commerce-upgrade-implementer
-description: Prepare and carry out SAP Commerce upgrade implementation work with explicit human review gates. Use to turn a Markdown or JSON upgrade analysis into a documented change plan covering code, SAP-provided migration tools such as OpenRewrite, and non-code upgrade activities; default tooling to dry-run first; compare approaches for complex customizations; explain reasoning and risks; wait for approval before touching code, configuration, or running local commands; then implement and verify only approved SAP Commerce or composable storefront changes.
+description: Prepare and carry out SAP Commerce upgrade implementation work with explicit human review gates. Use to turn a Markdown or JSON upgrade analysis into a documented change plan covering code, SAP Help and API compatibility evidence, SAP-provided migration tools such as OpenRewrite, and non-code upgrade activities; default tooling to dry-run first; compare approaches for complex customizations; explain reasoning and risks; wait for approval before touching code, configuration, or running local commands; then implement and verify only approved SAP Commerce or composable storefront changes.
 ---
 
 # SAP Commerce Upgrade Implementer
@@ -36,12 +36,14 @@ Convert an approved upgrade analysis into an implementation decision pack first,
 - Apply tool-generated changes only after explicit approval for the apply step. After applying, review the diff; do not assume generated changes are correct.
 - Treat OpenRewrite as a source transformation aid, not a complete upgrade implementation. It usually will not update CCv2 manifests, runtime pins, README setup docs, CI images, Solr version policy, environment properties, data, or deployment topology.
 - Implement remaining manual fixes after tool output has been reviewed and approved.
+- After framework/OpenRewrite/version changes, stop before starting the next migration category and request approval for the narrowest useful compile gate, normally `ant clean all` for the backend. If the user has already run it, triage all compiler errors and update the residual patch list before continuing.
 - Local commands such as `ant clean all`, `ant updatesystem`, Solr indexing, impex imports, or test suites may be run only with explicit approval in a local/dev project context. For shared, staging, or production environments, prepare runbook steps unless the user has provided a safe execution context and explicit approval.
 - For CCv2, prepare deployment/update instructions by default. Edit manifest, deployment, or environment configuration files only when approved. Do not trigger cloud deployments unless the user explicitly provides an appropriate authenticated workflow and approval.
 
 ## Decision Workflow
 
 1. Read the upgrade matrix and re-check the code hotspots it cites.
+   - Do not rely only on the analyser ledger or PDFs. Re-read the relevant current SAP Help update-release pages and SAP API compatibility/JApiCmp reports for the current-to-target path, then record any newly discovered mandatory change or absence of evidence.
 2. Split work into mechanical changes, design decisions, data/deployment actions, integration contract actions, and test actions.
    - Keep CCv2 actions separate from local/on-prem actions.
    - Keep code changes separate from system update, impex/data migration, Solr reindex, media migration, environment configuration, and smoke-test actions.
@@ -57,6 +59,25 @@ Convert an approved upgrade analysis into an implementation decision pack first,
 5. Keep rejected and deferred approaches visible in the pack so the reasoning survives project switching.
 6. After any migration-tool dry-run or apply, create a concrete residual patch list. Do not leave SAP Help items as broad workstreams when the required file-level changes can be inferred.
 
+## SAP Help And API Compatibility Sweep
+
+Before declaring an implementation plan complete for an SAP Commerce backend upgrade, perform this sweep even when the analyser output, source ledger, and OpenRewrite output look complete:
+
+- SAP Help coverage: consult the public SAP Help update-release pages for every version segment crossed, including patch/update pages, framework update pages, library migration pages, OAuth/security pages, Solr validity pages, and module-specific pages relevant to enabled extensions. If the user provides authorized SAP PDFs, use them as input, not as the only source.
+- API compatibility coverage: check SAP JApiCmp/API compatibility reports for the current-to-target path and search for `REMOVED`, `Deprecated`, `forRemoval`, package moves, constructor signature changes, bean ID changes, and newly introduced replacement classes. Map each relevant change to custom imports, subclasses, Spring XML bean parents, aliases, and extension dependencies.
+- Custom import scan: search custom backend code for removed or deprecated-for-removal SAP packages and third-party packages. At minimum for JDK21/Spring 6 paths, scan `hybris/bin/custom` for `org.apache.commons.lang.`, `javax.`, `org.springframework.security.oauth2`, `de.hybris.platform.sap.productconfig`, and any packages named in the JApiCmp report.
+- Bean wiring scan: search custom Spring XML and properties for SAP bean aliases, bean parents, extension names, and webapp names that changed in SAP Help or API reports. Treat custom subclasses of SAP classes and custom beans with SAP parents as high-risk compile/runtime hotspots.
+- Residual ledger: add every relevant finding to the decision pack/status as `apply`, `defer`, `not applicable`, or `needs human decision`, with the SAP Help/API evidence and project evidence.
+
+## Known JDK21 Hotspot Scans
+
+For 2211 JDK21 update lines, explicitly inspect these patterns and do not assume OpenRewrite handled them:
+
+- Commons Lang 2 removal: search for `org.apache.commons.lang.` imports and migrate applicable usages to `org.apache.commons.lang3.` or the SAP-documented manual replacement. `ReflectionToStringBuilder` should use `org.apache.commons.lang3.builder.ReflectionToStringBuilder`.
+- SAP Product Configuration / CPQ product-info APIs: search for `ConfigurationOrderEntryProductInfoModelPopulator`, `sapProductConfigOrderEntryInfoModelPopulator`, and `sapProductConfigDefaultOrderEntryInfoModelPopulator`. For targets where SAP removed the facade populator, migrate custom code and Spring wiring to the service-layer `ConfigurationProductInfoModelPopulator` / `sapProductConfigInfoModelPopulator` pattern only after verifying the target API locally or in SAP JApiCmp.
+- Custom SAP subclasses: any custom class extending an SAP class, overriding protected SAP methods, or injecting an SAP bean by alias must be revalidated against the target source/API report before claiming the upgrade patch is complete.
+- Generated and inactive modules: compile failures can hide in inactive custom extensions, autoloaded vendor folders, or generated metadata skipped by OpenRewrite. Reconcile `localextensions.xml`, autoload folders, and build output with the actual implementation scope.
+
 ## JDK21 / Spring 6 Upgrade Guardrails
 
 When the target is a JDK21/Spring 6 SAP Commerce line, always make a post-tool configuration pass against current public SAP Help plus the project ledger. Include these checks even when OpenRewrite succeeds:
@@ -69,6 +90,7 @@ When the target is a JDK21/Spring 6 SAP Commerce line, always make a post-tool c
 - Third-party and autoloaded extensions: inspect `localextensions.xml` paths, autoloaded folders, inactive custom modules, untracked vendored code, and nested `.git` directories. Decide whether each is in scope, vendored, submodule-managed, or accidental before applying upgrade conclusions.
 - Documentation consistency: update project setup docs when runtime or command expectations change, but keep docs separate from executable config in the change log.
 - Parse warnings and skipped files: treat parser warnings, inactive extensions, generated Gradle metadata, and untracked files as manual review inputs, not as harmless noise.
+- Removed/deprecated API sweep: incorporate the SAP Help and API compatibility sweep above into the post-tool pass. A successful OpenRewrite run is not enough if custom imports, subclasses, or bean parents still reference removed SAP or third-party APIs.
 
 ## Manifest Patch Checklist
 
