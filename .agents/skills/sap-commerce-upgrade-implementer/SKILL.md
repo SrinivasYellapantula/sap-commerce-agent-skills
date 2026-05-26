@@ -70,6 +70,19 @@ When the target is a JDK21/Spring 6 SAP Commerce line, always make a post-tool c
 - Documentation consistency: update project setup docs when runtime or command expectations change, but keep docs separate from executable config in the change log.
 - Parse warnings and skipped files: treat parser warnings, inactive extensions, generated Gradle metadata, and untracked files as manual review inputs, not as harmless noise.
 
+## Manifest Patch Checklist
+
+For CCv2 `manifest.json` or an equivalent deployment manifest, inspect and decide each area explicitly before implementation approval, then verify it after patching:
+
+- Top-level metadata: schema compatibility, `commerceSuiteVersion`, compatible `extensionPacks`, `solrVersion`, image processing flags, and any target-specific manifest syntax from SAP Help.
+- Runtime and config inputs: `useConfig` property locations, `localextensions.xml` source, Solr config location, persona/aspect-specific config, and whether related env property files need separate approved edits.
+- Extension and addon declarations: enabled extensions, storefront addons, integration pack dependencies, OAuth/security extensions, SmartEdit/OCC webservices, and target additions or removals SAP documents for the upgrade.
+- Aspect webapps: every aspect's `webapps` list, context paths, duplicate/missing webapps, legacy `oauth2` replacement with `authorizationserver` and `resourceserver`, and whether each webapp belongs on that aspect.
+- Aspect properties: scheduler properties such as `task.auxiliaryTables.scheduler.enabled`, auth proxy/header properties such as `authserver.enable.forwarded.header` when CDN/proxy evidence exists, storefront context, XSS/security overrides, node groups, and any target SAP Help property changes.
+- Solr manifest/config pair: align the manifest Solr minor with configset changes such as `luceneMatchVersion`, custom Solr config, and the non-code reindex plan.
+- Conditional SAP Help items: record each relevant SAP Help suggestion as applied, deferred, or not applicable with project evidence, especially when the manifest does not need a code diff.
+- Validation: parse JSON, run any available manifest/schema validation, compare old vs new aspect/webapp exposure, and include rollback notes for manifest/env changes.
+
 ## Implementation Rules
 
 - Do not bypass the final approval gate because a change looks trivial.

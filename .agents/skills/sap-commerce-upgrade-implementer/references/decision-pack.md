@@ -35,6 +35,21 @@ Use this document shape before code changes.
 | C-11 | Local/on-prem operations | | needs evidence | moderate | Local scripts/config | |
 | C-12 | Data/system update | | needs evidence | complex | Impex/update/system data | |
 
+## Manifest Patch Checklist
+
+Use this checklist for CCv2 `manifest.json` or equivalent deployment manifest changes. Mark each row as applied, deferred, or not applicable with evidence.
+
+| Area | Check | Evidence | Decision / Patch | Verification |
+|---|---|---|---|---|
+| Top-level metadata | Schema compatibility, Commerce version, extension packs, Solr version, image processing flags, target manifest syntax. | | | |
+| Runtime/config inputs | `useConfig` properties, localextensions source, Solr config location, persona/aspect config, env property files needing separate edits. | | | |
+| Extensions/addons | Enabled extensions, storefront addons, integration pack dependencies, OAuth/security extensions, SmartEdit/OCC webservices, documented additions/removals. | | | |
+| Aspect webapps | Webapps per aspect, context paths, duplicates, missing webapps, `oauth2` replacement with `authorizationserver` and `resourceserver`, aspect placement. | | | |
+| Aspect properties | Scheduler, forwarded-header/proxy, storefront context, XSS/security overrides, node groups, SAP Help target property changes. | | | |
+| Solr pair | Manifest Solr minor, configset `luceneMatchVersion`, custom Solr config, reindex plan. | | | |
+| Conditional SAP Help items | Applied/deferred/not-applicable status for relevant upgrade suggestions that may not create a code diff. | | | |
+| Validation and rollback | JSON parse, schema/manifest validation if available, old-vs-new webapp exposure, manifest/env rollback notes. | | | |
+
 ## Decision Table
 
 | Decision ID | Problem | Approach | Benefits | Costs and risks | Recommendation | Human decision |
