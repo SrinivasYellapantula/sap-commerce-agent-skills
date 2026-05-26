@@ -1,4 +1,4 @@
 interface:
   display_name: "SAP Commerce Upgrade Analyser"
-  short_description: "Assess upgrade code and operational impact."
-  default_prompt: "Use $sap-commerce-upgrade-analyser to assess this SAP Commerce upgrade, including SAP docs, tool artifacts, code, CCv2/local operations, and JSON handoff."
+  short_description: "Assess upgrade API, code, and operational impact."
+  default_prompt: "Use $sap-commerce-upgrade-analyser to assess this SAP Commerce upgrade, including SAP Help docs, API compatibility/JApiCmp evidence, tool artifacts, code, CCv2/local operations, and JSON handoff."
