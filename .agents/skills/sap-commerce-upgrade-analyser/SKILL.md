@@ -45,6 +45,7 @@ Before producing the final handoff for backend upgrades, run a targeted source s
 - Search custom Java and Spring XML for removed classes, deprecated-for-removal classes, changed method signatures, removed overloads, and replacement classes named in SAP API reports.
 - Search for direct calls to SAP facades/services whose signatures changed, not only imports. For 2211 JDK21 paths, explicitly scan for old `OutboundServiceFacade.send(payload, integrationObjectCode, destinationId)` calls and flag migration to `SyncParameters`.
 - Search custom integration modules for SAP outbound/inbound service overrides, custom integration objects, consumed destinations, and SAP CPI/SCPI quote/order/customer service subclasses.
+- When a compiler/build error from an implementation run reveals a missed SAP API migration, convert the failing symbol or method signature into a project-wide scan pattern and update the analysis/handoff. Do not treat the first failing file as the full scope.
 - Include a concrete residual work item for every custom call site found, even when OpenRewrite is expected to handle broad framework changes.
 
 4. Classify the work twice.
@@ -77,5 +78,6 @@ Do not implement. End with:
 1. A prioritized change matrix.
 2. A list of complex decisions for the implementer.
 3. A list of not-needed changes with evidence.
-4. A list of missing project inputs or SAP source constraints.
-5. A valid JSON handoff block with no comments, no trailing commas, no secrets, and no private endpoint credentials.
+4. A list of build-error feedback items that must be rechecked project-wide, if any.
+5. A list of missing project inputs or SAP source constraints.
+6. A valid JSON handoff block with no comments, no trailing commas, no secrets, and no private endpoint credentials.
