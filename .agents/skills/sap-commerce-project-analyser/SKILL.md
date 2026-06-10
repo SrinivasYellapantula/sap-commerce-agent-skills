@@ -43,6 +43,7 @@ SAP Commerce repositories are often too large for a direct full read. Start with
 5. Trace journeys and contracts.
    - Follow backend responsibilities in the order `Controller -> Facade -> Service -> DAO -> Model`; check whether business rules leak into controllers, populators, utilities, or frontend code.
    - Map storefront-to-OCC contracts when storefront code exists: CMS mappings, OCC endpoints, DTO fields, adapters/connectors, auth config, routes, SSR clues, and duplicated calculations.
+   - For custom OCC or web controllers on Spring 6 / SAP Commerce JDK21 baselines, combine class-level `@RequestMapping` paths with method-level `@GetMapping`, `@PostMapping`, `@PutMapping`, `@PatchMapping`, `@DeleteMapping`, and `@RequestMapping` paths when inventorying endpoints. Flag duplicate captured path-variable names in the effective path, especially repeated `{userId}`, `{baseSiteId}`, `{cartId}`, `{code}`, or regex path variables. Treat this as a runtime startup risk because Spring 6 `PathPatternParser` rejects duplicate captures that older path matching may have tolerated.
    - Trace the critical flows supported by evidence: login/auth, product search and PDP, add to cart, checkout/place order, pricing/stock/tax, customer/account/order history, product imports, order status/documents, and integration failure or retry paths.
    - For enterprise order flows, map `Cart -> Validation -> Price/Stock -> Payment/Approval -> Order -> ERP Order -> Confirmation -> Invoice/Delivery/Status` when the project evidence supports it.
 
