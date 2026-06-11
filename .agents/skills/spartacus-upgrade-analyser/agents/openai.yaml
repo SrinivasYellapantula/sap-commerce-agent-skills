@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spartacus Upgrade Analyser"
+  short_description: "Assess frontend upgrade impact."
+  default_prompt: "Use $spartacus-upgrade-analyser to assess this Spartacus/composable storefront upgrade with SAP Help, authorized PDFs/KBAs, frontend code evidence, backend integration context, a prioritized change matrix, and JSON handoff."

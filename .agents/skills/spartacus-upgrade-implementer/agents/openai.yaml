@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spartacus Upgrade Implementer"
+  short_description: "Apply approved frontend upgrades."
+  default_prompt: "Use $spartacus-upgrade-implementer to turn an approved Spartacus/composable storefront upgrade analysis into a decision pack, then implement only approved frontend upgrade changes with verification and rollback notes."
