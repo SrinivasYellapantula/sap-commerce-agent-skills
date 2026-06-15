@@ -1,8 +1,8 @@
 # SAP Commerce Agent Skills
 
-Reusable Codex agent skills for SAP Commerce Cloud and Composable Storefront project analysis, upgrade planning, and gated implementation work.
+Reusable AI agent skills for SAP Commerce Cloud and Composable Storefront project analysis, upgrade planning, and gated implementation work.
 
-This repository is intended to behave like a small specialist agent team. The skills are not generic prompts; they encode repeatable SAP Commerce upgrade workflows, evidence rules, human approval gates, and project-specific lessons learned from real 2211 / JDK21 upgrade work.
+This repository is intended to behave like a small specialist agent team. The skills are not generic prompts; they encode repeatable SAP Commerce upgrade workflows, evidence rules, human approval gates, and project-specific lessons learned from real 2211 / JDK21 upgrade work. They are written to be portable across AI tools wherever possible.
 
 ## Included Skills
 
@@ -25,7 +25,7 @@ This repository is intended to behave like a small specialist agent team. The sk
 
 ## Repository Layout
 
-The skill folders live under `.agents/skills/`:
+The skill folders currently live under `.agents/skills/`:
 
 ```text
 .agents/
@@ -45,7 +45,9 @@ The skill folders live under `.agents/skills/`:
       references/
 ```
 
-`.agents` is intentionally a hidden folder because directories that start with `.` are hidden by Unix/macOS convention. It is still tracked by Git. In Finder, press `Cmd + Shift + .` to show hidden files; in terminal, use:
+`.agents` is a repository convention for keeping agent instructions grouped in one place. The important content is inside each `SKILL.md`; AI tools that do not understand this folder layout can still use the same instructions by importing, copying, or referencing those files in their own agent/prompt configuration.
+
+`.agents` is hidden in Finder by default because directories that start with `.` are hidden by Unix/macOS convention. It is still tracked by Git. In Finder, press `Cmd + Shift + .` to show hidden files; in terminal, use:
 
 ```bash
 ls -la
@@ -89,6 +91,17 @@ The implementer skills are deliberately gated:
 
 This keeps the agents useful in enterprise repositories where many files may be dirty, generated, environment-specific, or owned by another team.
 
+## Portability
+
+The workflows are designed to be AI-tool agnostic:
+
+- The core instructions live in plain Markdown.
+- Each skill has a clear name, scope, trigger intent, workflow, evidence rules, and output contract.
+- Tool-specific behavior is kept to a minimum and should be adapted by the consuming AI runtime.
+- Human approval gates, read-only analysis, source-ledger discipline, and verification expectations apply regardless of the AI tool used.
+
+Different tools may package these instructions differently. For example, one tool may discover `.agents/skills/*/SKILL.md` automatically, while another may require pasting the Markdown into a custom agent, system prompt, project instruction, assistant profile, or workspace rule. That should not change the underlying workflow.
+
 ## Current Upgrade Knowledge Areas
 
 The skills currently include guardrails for common SAP Commerce 2211 JDK21 and Spring 6 upgrade issues, including:
@@ -119,9 +132,11 @@ The skills are designed to prefer evidence over guesswork:
 - A text-search miss is not proof that a feature is absent.
 - Runtime failures should become new scan rules when they reveal a reusable upgrade blind spot.
 
-## Installing Or Updating Locally
+## Installing Or Adapting Locally
 
-If your Codex runtime loads skills from `$CODEX_HOME/skills`, copy or sync the desired folders from `.agents/skills/` into your local skills directory.
+Use the `SKILL.md` files in the way your AI tool expects custom agents or reusable instructions to be provided.
+
+For tools that support a skills folder, copy or sync the desired folders from `.agents/skills/` into that tool's local skills directory.
 
 Example:
 
@@ -129,7 +144,9 @@ Example:
 cp -R .agents/skills/sap-commerce-upgrade-implementer ~/.codex/skills/
 ```
 
-Depending on the runtime, you may need to restart Codex or refresh skill discovery after changing installed skills.
+For tools that do not support skill folders, copy the relevant `SKILL.md` content into the tool's custom agent, assistant instructions, project rules, or prompt-library mechanism.
+
+Depending on the runtime, you may need to restart the tool or refresh agent discovery after changing installed skills.
 
 ## Maintenance Notes
 
