@@ -138,13 +138,40 @@ Use the `SKILL.md` files in the way your AI tool expects custom agents or reusab
 
 For tools that support a skills folder, copy or sync the desired folders from `.agents/skills/` into that tool's local skills directory.
 
-Example:
+Codex-style local skills example:
 
 ```bash
 cp -R .agents/skills/sap-commerce-upgrade-implementer ~/.codex/skills/
 ```
 
-For tools that do not support skill folders, copy the relevant `SKILL.md` content into the tool's custom agent, assistant instructions, project rules, or prompt-library mechanism.
+Copy all skills into a folder-based agent runtime:
+
+```bash
+mkdir -p ~/.ai-agent-skills
+cp -R .agents/skills/* ~/.ai-agent-skills/
+```
+
+Use one skill as a custom agent instruction file:
+
+```bash
+cp .agents/skills/sap-commerce-project-analyser/SKILL.md ~/ai-agents/sap-commerce-project-analyser.md
+```
+
+Use one skill as project-level rules or workspace instructions:
+
+```bash
+mkdir -p .ai/rules
+cp .agents/skills/spartacus-upgrade-analyser/SKILL.md .ai/rules/spartacus-upgrade-analyser.md
+```
+
+Use one skill in a prompt-library folder:
+
+```bash
+mkdir -p ~/prompt-library/sap-commerce
+cp .agents/skills/sap-commerce-upgrade-implementer/SKILL.md ~/prompt-library/sap-commerce/upgrade-implementer.md
+```
+
+For tools that do not support files or skill folders, open the relevant `SKILL.md`, copy the full Markdown, and paste it into the tool's custom agent, assistant instructions, project rules, system prompt, or reusable prompt-library mechanism.
 
 Depending on the runtime, you may need to restart the tool or refresh agent discovery after changing installed skills.
 
