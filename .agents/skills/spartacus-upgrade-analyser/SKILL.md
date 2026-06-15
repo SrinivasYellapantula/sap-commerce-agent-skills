@@ -34,6 +34,7 @@ Turn a storefront codebase and target SAP Commerce / Composable Storefront versi
    - Match SAP/Angular changes to actual imports, configuration providers, modules, routes, CMS mappings, OCC endpoint usage, authentication config, environment files, custom adapters/connectors, and build scripts.
    - Search for removed/deprecated Spartacus APIs and changed package names. Include import scans and call-site scans; do not stop at package versions.
    - Check OAuth/authorizationserver alignment against the upgraded backend: no legacy implicit/password assumptions, browser clients should use authorization code with PKCE when applicable, OCC calls should send bearer JWTs expected by the new backend, and backend base URLs should point at the correct webapps.
+   - For custom authorizationserver login pages, inspect whether the storefront must provide extra authorization-code request context such as base site, language, storefront domain, or a context token for backend `LoginPageUriPlaceholderProvider` resolution. Verify that the configured client id, registered redirect URI, custom login route, `ui_locales`, and any project parameters match the backend `OAuthClientDetails.loginPageUri` placeholders and allowed-host configuration.
    - Check runtime-sensitive areas: SSR hydration/build, SmartEdit preview, CMS component mapping, route guards, interceptors, local storage/session storage auth behavior, CORS assumptions, custom checkout/cart/order flows, B2B org/user flows, language/currency/base-site config, and public asset paths.
    - Mark a change `not needed` only with repository evidence; otherwise use `needs evidence`.
 
@@ -53,7 +54,7 @@ Turn a storefront codebase and target SAP Commerce / Composable Storefront versi
 - Package scan: `package.json`, lockfiles, Angular config, `tsconfig*`, builder config, `browserslist`, `.nvmrc`, `.node-version`, Docker/CI files, and scripts.
 - Spartacus API scan: imports from `@spartacus/*`, `@cx-spartacus/*`, custom extensions of Spartacus classes, custom providers, `ConfigModule.withConfig`, `provideConfig`, routing config, feature toggles, CMS mappings, and converter/normalizer/custom adapter classes.
 - Angular migration scan: deprecated Angular APIs, module/provider patterns affected by the target Angular version, RxJS call shapes, TypeScript strictness, Sass/build builder changes, and testing builder changes.
-- Auth/OCC scan: OAuth client config, token flow assumptions, interceptors, OCC base URL/webroot, `/authorizationserver` and `/resourceserver` expectations, CORS/origin assumptions, and backend endpoint contract changes.
+- Auth/OCC scan: OAuth client config, token flow assumptions, interceptors, OCC base URL/webroot, `/authorizationserver` and `/resourceserver` expectations, CORS/origin assumptions, backend endpoint contract changes, custom login routes, authorization request parameters, `ui_locales`, base-site/language propagation, and compatibility with backend `OAuthClientDetails.loginPageUri` placeholders.
 - Runtime feedback scan: when a build/runtime error appears, convert the failing symbol, package, route, DI token, provider, or endpoint into a project-wide scan pattern and add it to the residual matrix.
 
 ## Output Contract
