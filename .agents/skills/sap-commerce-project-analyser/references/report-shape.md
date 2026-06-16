@@ -10,6 +10,7 @@ The report should help a SAP CX Enterprise Architect quickly understand:
 - Where SAP Commerce is standard vs customized
 - Which systems own which data
 - Which flows are business-critical
+- Which diagrams are required, optional, or blocked by missing evidence
 - Where change risk exists
 - What should be inspected next
 
@@ -157,7 +158,55 @@ flowchart LR
 
 ---
 
-## 3. What the Project Appears to Do
+## 3. Required Diagram Portfolio
+
+Derive this portfolio from repository evidence before rendering detailed diagrams. Do not include a generic diagram set. The point is to tell the team which diagrams are genuinely needed for this project and why.
+
+### Diagram Decision Matrix
+
+| Diagram | Status | Why Needed / Why Optional / Why Blocked | Evidence | Confidence | Recommended Notation | Include Mermaid Now? |
+|---|---|---|---|---:|---|---|
+| System context | Required / Optional / Blocked |  |  | High / Medium / Low / Unknown | `flowchart` | Yes / No |
+| Solution/container architecture |  |  |  |  | `flowchart` |  |
+| Extension dependency map |  |  |  |  | `flowchart` or table |  |
+| Storefront/OCC contract map |  |  |  |  | `flowchart` + table |  |
+| Site/store/catalog/content model |  |  |  |  | `flowchart` or ER-style diagram |  |
+| Data ownership matrix |  |  |  |  | table |  |
+| Integration landscape |  |  |  |  | `flowchart` |  |
+| Login/auth sequence |  |  |  |  | `sequenceDiagram` |  |
+| Product search/PDP sequence |  |  |  |  | `sequenceDiagram` |  |
+| Cart/add-to-cart sequence |  |  |  |  | `sequenceDiagram` |  |
+| Checkout/place-order sequence |  |  |  |  | `sequenceDiagram` |  |
+| Pricing/stock/tax flow |  |  |  |  | `sequenceDiagram` or flowchart |  |
+| Solr/search architecture |  |  |  |  | `flowchart` |  |
+| CMS/SmartEdit architecture |  |  |  |  | `flowchart` |  |
+| Business process/cronjob map |  |  |  |  | `flowchart` |  |
+| Backoffice/support operations map |  |  |  |  | `flowchart` or table |  |
+| Deployment/runtime architecture |  |  |  |  | `flowchart` |  |
+| Observability/supportability map |  |  |  |  | `flowchart` or table |  |
+| OOTB-vs-custom impact map |  |  |  |  | matrix/table |  |
+| Change-impact map |  |  |  |  | matrix/table |  |
+
+### Diagram Selection Rules
+
+Mark a diagram `Required` when one or more repository-backed triggers are present:
+- Multiple channels, storefront apps, sites, stores, catalogs, languages, currencies, brands, or countries
+- Custom OCC/web controllers, DTOs, adapters, CMS mappings, or frontend feature modules
+- Custom itemtypes, relations, enums, interceptors, validators, Solr value providers, or CMS components
+- B2B organization, permissions, approval processes, PunchOut, ASM, SSO, CDC, or custom security filters
+- ERP, S/4HANA, CPI/SCPI, PIM, OMS, payment, tax, shipping, notification, analytics, or document integrations
+- Custom checkout, pricing, stock, tax, promotion, order submission, return, invoice, or order-status flows
+- Business processes, cronjobs, retry/reprocess logic, Backoffice actions, or operational support tooling
+- CCv2/aspect/deployment evidence, CI/CD config, observability tooling, or environment-specific runtime design
+- OOTB class copies, Spring alias overrides, accelerator dependencies, or high-risk customization hotspots
+
+Mark a diagram `Blocked` when the diagram is important but evidence is missing. For example, storefront architecture is blocked when only backend code is available; deployment architecture is blocked when manifests/aspects/pipeline files are absent; integration landscape is blocked when only endpoint names exist but no flow or ownership evidence is visible.
+
+After the matrix, render only the diagrams with enough evidence to be useful. For blocked diagrams, provide the exact files or evidence needed next.
+
+---
+
+## 4. What the Project Appears to Do
 
 Write a short narrative summary.
 
@@ -181,7 +230,7 @@ The main architectural complexity appears to be around `<customization/integrati
 
 ---
 
-## 4. Evidence Register
+## 5. Evidence Register
 
 Before deep analysis, provide a short evidence register.
 
@@ -200,7 +249,7 @@ This section helps prevent unsupported assumptions.
 
 ---
 
-## 5. Solution Map
+## 6. Solution Map
 
 Create this table when evidence exists.
 
@@ -218,7 +267,7 @@ Only include rows supported by evidence.
 
 ---
 
-## 6. Version and Runtime Baseline
+## 7. Version and Runtime Baseline
 
 | Area | Finding | Evidence | Risk / Comment |
 |---|---|---|---|
@@ -244,7 +293,7 @@ Flag incompatibility risks, especially:
 
 ---
 
-## 7. Extension Map
+## 8. Extension Map
 
 Group extensions clearly.
 
@@ -271,7 +320,7 @@ The most risk-sensitive extensions appear to be `<names>` because `<reason>`.
 
 ---
 
-## 8. Backend Architecture and Layering
+## 9. Backend Architecture and Layering
 
 Analyze whether the backend follows clean SAP Commerce layering.
 
@@ -313,7 +362,7 @@ Flag issues such as:
 
 ---
 
-## 9. Data Model Analysis
+## 10. Data Model Analysis
 
 Start with all custom `*-items.xml`.
 
@@ -344,7 +393,7 @@ Flag:
 
 ---
 
-## 10. Site, Store, Catalog, Content, and Search Model
+## 11. Site, Store, Catalog, Content, and Search Model
 
 Create when evidence exists.
 
@@ -372,7 +421,7 @@ Then explain:
 
 ---
 
-## 11. Storefront / Spartacus Architecture
+## 12. Storefront / Spartacus Architecture
 
 If frontend code is available, analyze:
 
@@ -409,7 +458,7 @@ Flag:
 
 ---
 
-## 12. OCC Contract and API Map
+## 13. OCC Contract and API Map
 
 Create an OCC contract table for traced APIs.
 
@@ -433,7 +482,7 @@ Flag:
 
 ---
 
-## 13. Critical Journey Maps
+## 14. Critical Journey Maps
 
 Trace only evidence-backed journeys.
 
@@ -541,7 +590,7 @@ If ERP call is synchronous before order creation or after order creation, adjust
 
 ---
 
-## 14. Cart, Checkout, Pricing, Stock, and Order Architecture
+## 15. Cart, Checkout, Pricing, Stock, and Order Architecture
 
 Create a focused table.
 
@@ -570,7 +619,7 @@ Flag:
 
 ---
 
-## 15. Integration and Source-System Ownership
+## 16. Integration and Source-System Ownership
 
 ### Integration Map
 
@@ -606,7 +655,7 @@ Flag:
 
 ---
 
-## 16. Search, CMS, SmartEdit, and Content Architecture
+## 17. Search, CMS, SmartEdit, and Content Architecture
 
 ### Search / Solr
 
@@ -642,7 +691,7 @@ Flag:
 
 ---
 
-## 17. Backoffice and Operational Support
+## 18. Backoffice and Operational Support
 
 | Area | Finding | Evidence | Risk |
 |---|---|---|---|
@@ -665,7 +714,7 @@ Flag:
 
 ---
 
-## 18. Security and Authorization
+## 19. Security and Authorization
 
 | Area | Finding | Evidence | Risk |
 |---|---|---|---|
@@ -690,7 +739,7 @@ Flag:
 
 ---
 
-## 19. Performance, Caching, and Scalability
+## 20. Performance, Caching, and Scalability
 
 | Area | Finding | Evidence | Risk |
 |---|---|---|---|
@@ -717,7 +766,7 @@ Flag:
 
 ---
 
-## 20. Deployment, Configuration, and Environment Management
+## 21. Deployment, Configuration, and Environment Management
 
 | Area | Finding | Evidence | Risk |
 |---|---|---|---|
@@ -741,7 +790,7 @@ Flag:
 
 ---
 
-## 21. Testing and Quality Baseline
+## 22. Testing and Quality Baseline
 
 | Test Type | Evidence | Coverage Impression | Gaps |
 |---|---|---|---|
@@ -763,7 +812,7 @@ Flag:
 
 ---
 
-## 22. OOTB vs Custom Comparison
+## 23. OOTB vs Custom Comparison
 
 | Area | OOTB SAP Commerce Behavior | Project Customization | Evidence | Upgrade Risk |
 |---|---|---|---|---|
@@ -785,7 +834,7 @@ Use this to judge how close the project remains to SAP Commerce standard.
 
 ---
 
-## 23. Customization Hotspots
+## 24. Customization Hotspots
 
 | Hotspot | Evidence | Why It Is Important | Risk | Suggested Inspection |
 |---|---|---|---|---|
@@ -806,7 +855,7 @@ Examples:
 
 ---
 
-## 24. Risk Register
+## 25. Risk Register
 
 | ID | Risk | Impact | Likelihood | Severity | Evidence | Recommendation |
 |---|---|---|---|---|---|---|
@@ -825,7 +874,7 @@ Risk categories:
 
 ---
 
-## 25. Change Impact Matrix
+## 26. Change Impact Matrix
 
 | Change Area | Likely Impacted Components | Files / Evidence | Risk | Testing Needed |
 |---|---|---|---|---|
@@ -838,7 +887,7 @@ Risk categories:
 
 ---
 
-## 26. Upgrade Baseline
+## 27. Upgrade Baseline
 
 | Area | Signal | Evidence | Upgrade Risk |
 |---|---|---|---|
@@ -864,7 +913,7 @@ The most important files/classes to revisit before upgrade are:
 
 ---
 
-## 27. Quick Wins
+## 28. Quick Wins
 
 | Quick Win | Why It Helps | Effort | Risk Reduced | Evidence |
 |---|---|---|---|---|
@@ -882,7 +931,7 @@ Examples:
 
 ---
 
-## 28. Unknowns and Unassessed Areas
+## 29. Unknowns and Unassessed Areas
 
 Be explicit.
 
@@ -899,7 +948,7 @@ Do not hide gaps. Unknowns are important architectural output.
 
 ---
 
-## 29. Next Inspection Steps
+## 30. Next Inspection Steps
 
 Prioritize next steps.
 
@@ -919,7 +968,7 @@ Expected outcome: Confirm whether order creation is sync/async, idempotent, reco
 
 ---
 
-## 30. Final Architect Verdict
+## 31. Final Architect Verdict
 
 End with a concise verdict.
 
@@ -945,7 +994,7 @@ Before making significant changes, the team should first inspect `<priority area
 
 ---
 
-## 31. Machine-Readable JSON Handoff
+## 32. Machine-Readable JSON Handoff
 
 After the Markdown report, include a final JSON block for the next skill or agent. The JSON must be valid, compact, and evidence-based. Do not include comments, trailing commas, secrets, credentials, private endpoint values, or sensitive payloads.
 
@@ -976,6 +1025,17 @@ After the Markdown report, include a final JSON block for the next skill or agen
   "critical_flows": [],
   "custom_hotspots": [],
   "risks": [],
+  "diagram_portfolio": [
+    {
+      "diagram": "",
+      "status": "required|optional|blocked",
+      "reason": "",
+      "evidence": [],
+      "confidence": "high|medium|low|unknown",
+      "notation": "flowchart|sequenceDiagram|classDiagram|table|matrix",
+      "missing_evidence": []
+    }
+  ],
   "change_impact": [],
   "upgrade_baseline": {
     "high_risk_custom_areas": [],

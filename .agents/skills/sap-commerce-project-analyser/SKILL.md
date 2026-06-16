@@ -1,6 +1,6 @@
 ---
 name: sap-commerce-project-analyser
-description: Analyze SAP Commerce projects and their composable storefront or Spartacus counterparts. Use for staged large-repository scans, evidence-based enterprise architecture reports, project comprehension briefs, extension or data-model inventories, B2B or B2C posture, critical-flow and OCC contract analysis, OOTB-vs-custom reviews, integration maps, risk registers, Markdown plus JSON handoffs, change-impact matrices, onboarding briefs, upgrade baselines, or project comparisons.
+description: Analyze SAP Commerce projects and their composable storefront or Spartacus counterparts. Use for staged large-repository scans, evidence-based enterprise architecture reports, required diagram portfolios, project comprehension briefs, extension or data-model inventories, B2B or B2C posture, critical-flow and OCC contract analysis, OOTB-vs-custom reviews, integration maps, risk registers, Markdown plus JSON handoffs, change-impact matrices, onboarding briefs, upgrade baselines, or project comparisons.
 ---
 
 # SAP Commerce Project Analyser
@@ -16,7 +16,8 @@ SAP Commerce repositories are often too large for a direct full read. Start with
 1. Index high-signal files and folders: `localextensions.xml`, manifests, build files, custom extension names, `items.xml`, Spring XML, impex/data folders, OCC controllers, cronjobs, process definitions, integration config, storefront `package.json`, Angular config, CMS mappings, and deployment files.
 2. Produce a small evidence ledger with confirmed versions, roots, custom extensions, likely business flows, integration clues, and missing inputs.
 3. Deep-dive only into high-signal or high-risk areas: checkout, pricing, stock, order submission, ERP/PIM/payment integrations, B2B authorization, Solr, CMS/SmartEdit, Backoffice operations, and upgrade hotspots.
-4. Keep the final report evidence-driven; mark broad areas as `unassessed` instead of reading the whole repo indiscriminately.
+4. Build a diagram decision ledger while scanning: which diagrams are required, which are optional, which are blocked by missing evidence, and which repository artifacts support each diagram.
+5. Keep the final report evidence-driven; mark broad areas as `unassessed` instead of reading the whole repo indiscriminately.
 
 ## Workflow
 
@@ -58,15 +59,24 @@ SAP Commerce repositories are often too large for a direct full read. Start with
    - Use extension selection, endpoints/destinations, integration objects, service clients, DTO mappings, webhooks, SOAP/REST clients, OAuth/SSO clues, cronjobs, events, retry/timeout config, deployment scripts, and data imports as evidence.
    - For each important integration, identify the source/master system, direction, sync/async behavior, trigger, protocol or mechanism, failure handling, retry/idempotency posture, and operational owner when evidence exists.
 
-8. Assess customization and change safety.
+8. Infer the required diagram portfolio.
+   - Decide diagrams from evidence, not from a fixed template. Always consider these baseline diagrams: system context, solution/container architecture, extension dependency map, integration landscape, data ownership, site-store-catalog-content model, critical journey sequence diagrams, deployment/runtime, OOTB-vs-custom impact, and change-impact map.
+   - Promote a diagram to `required` when the codebase exposes real complexity or risk in that area. Common triggers: multiple channels, custom OCC controllers, custom itemtypes/relations, multi-site or multi-catalog impex, B2B approvals/permissions, real-time pricing/stock/tax/payment, ERP/PIM/OMS/CDC/CPI integrations, custom Solr value providers, custom CMS components, business processes, cronjobs, security filters, Backoffice tooling, CCv2/aspect config, or copied/overridden OOTB behavior.
+   - Mark a diagram `optional` when it would help but evidence shows low complexity. Mark it `blocked` when the diagram is important but key evidence is absent, such as missing storefront source, deployment manifests, impex, integration config, or environment-neutral API contract details.
+   - For each required or blocked diagram, record: purpose, audience, evidence files/classes/configs, confidence, missing evidence, recommended notation (`flowchart`, `sequenceDiagram`, `classDiagram`, or table), and whether to include Mermaid in the report.
+   - Generate Mermaid only when the diagram can be made concrete with project labels. Use tables instead of vague diagrams when evidence is too thin. Never invent systems, flows, or ownership that repository evidence does not support.
+   - Prefer these notation choices: C4-style flowcharts for context/container/component views, sequence diagrams for login/search/cart/checkout/order/integration flows, class or ER-style Mermaid for custom data model hotspots, flowcharts for Solr/CMS/deployment/operations, and matrices for data ownership or change impact.
+
+9. Assess customization and change safety.
    - Measure custom item types, Spring overrides, OCC endpoints, frontend component overrides, search value providers, checkout/order customizations, business processes, integration contracts, support tooling, and test gaps.
    - Separate extension of OOTB types from net-new domain models and call out high-risk override hotspots.
    - Produce risks, unknowns, quick wins, and change-impact links for the areas the user may change next.
 
-9. Deliver an evidence-backed report.
+10. Deliver an evidence-backed report.
    - Use [references/report-shape.md](references/report-shape.md) for the report structure.
    - Read the relevant parts of [references/project-analysis-playbook.md](references/project-analysis-playbook.md) for deep inspection checklists, search terms, smell lists, the first-two-days sequence, and the expected architect artifacts.
-   - Use tables and Mermaid diagrams for extension groups, version baselines, data maps, integration edges, critical flows, OCC contracts, OOTB-vs-custom comparisons, risk registers, and change-impact matrices when evidence supports them.
+   - Include a diagram portfolio section that lists required, optional, and blocked diagrams with evidence and confidence before rendering detailed diagrams.
+   - Use tables and Mermaid diagrams for extension groups, version baselines, data maps, integration edges, critical flows, OCC contracts, OOTB-vs-custom comparisons, risk registers, change-impact matrices, and the required diagram portfolio when evidence supports them.
    - Distinguish confirmed findings, inferences, unknowns, unassessed areas, and next files to inspect.
    - End the human-readable Markdown report with a valid JSON handoff for `$sap-commerce-upgrade-analyser`.
 
@@ -123,6 +133,7 @@ Use this JSON shape as the final block when enough evidence exists:
   "critical_flows": [],
   "custom_hotspots": [],
   "risks": [],
+  "diagram_portfolio": [],
   "upgrade_baseline": {
     "high_risk_custom_areas": [],
     "integration_families": [],
