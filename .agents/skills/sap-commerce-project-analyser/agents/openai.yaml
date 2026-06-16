@@ -1,4 +1,4 @@
 interface:
   display_name: "SAP Commerce Project Analyser"
-  short_description: "Map SAP Commerce architecture, diagrams, flows, and risks."
-  default_prompt: "Use $sap-commerce-project-analyser to quick-scan this SAP Commerce project, infer the required evidence-backed diagram portfolio, then produce a Markdown report and JSON handoff."
+  short_description: "Map SAP Commerce codebase, diagrams, flows, and risks."
+  default_prompt: "Use $sap-commerce-project-analyser to quick-scan this SAP Commerce project, prepare a codebase understanding report, infer the required evidence-backed diagram portfolio, and produce Markdown/PDF-ready outputs plus JSON handoff."

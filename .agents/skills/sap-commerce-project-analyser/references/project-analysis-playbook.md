@@ -1899,3 +1899,111 @@ Data model -> Extension structure -> Site/catalog/store setup -> Spring override
 ```
 
 This gives the full picture quickly without getting lost in random classes.
+
+---
+
+## 38. Client implementation assessment method
+
+When asked to check a client's existing SAP Commerce implementation, run the assessment in layers and keep a visible evidence trail.
+
+### 38.1 Intake and boundaries
+
+Confirm or infer:
+
+```text
+Business model and channels
+Backend root and optional storefront root
+Current Commerce/storefront versions
+Deployment model and environments
+Known pain points or target change/upgrade
+Available evidence: code, docs, impex, manifests, logs, build outputs, SAP notes
+```
+
+State any missing evidence before drawing conclusions. Missing storefront, deployment, integration, production data, or operations evidence should become explicit unknowns.
+
+### 38.2 Architecture discovery order
+
+Use this order for most projects:
+
+```text
+1. Business capability and channel signals
+2. localextensions.xml and extension boundaries
+3. Version/runtime/deployment baseline
+4. Site, store, catalog, content, language, currency setup
+5. Custom data model and relations
+6. Spring aliases, strategies, interceptors, validators, and process definitions
+7. OCC/API contracts and storefront mappings
+8. Critical journeys: login, search, cart, checkout, order, account, imports, failures
+9. Integrations and data ownership
+10. Operations: cronjobs, Backoffice, observability, support actions
+11. Security, performance, testing, upgradeability
+12. Diagram portfolio, risks, and change-impact map
+```
+
+### 38.3 Codebase understanding document
+
+Prepare the document as a layered handover:
+
+```text
+Executive view: what the platform does, biggest risks, biggest unknowns
+Architecture view: context, containers, extension groups, integrations, runtime
+Functional view: supported business capabilities and user journeys
+Technical view: data model, APIs, services, Spring overrides, custom hotspots
+Operational view: jobs, processes, Backoffice, monitoring, deployment, support
+Change view: OOTB-vs-custom, test maturity, upgrade risk, change-impact matrix
+Evidence appendix: files/classes/configs reviewed, confidence, missing evidence
+```
+
+Do not make the JSON handoff the main human deliverable. The primary document should be readable by architects, directors, developers, QA, and support leads.
+
+### 38.4 Architect questions to answer
+
+Make sure the final analysis answers:
+
+```text
+What business capabilities does the implementation support?
+Which extensions and customizations carry the business logic?
+Which systems own product, price, stock, customer, order, invoice, and content data?
+Which flows are synchronous, asynchronous, retryable, observable, and supportable?
+Where has SAP Commerce standard behavior been extended, overridden, or copied?
+Which parts are fragile for upgrade, security, performance, operations, or testing?
+Which diagrams are required to explain and safely change the system?
+What should the team inspect next before making a major change?
+```
+
+---
+
+## 39. Diagram and deliverable packaging
+
+Use diagrams as evidence-backed explanation artifacts, not decoration.
+
+### 39.1 Required diagram decision
+
+For each diagram candidate, record:
+
+```text
+Status: required, optional, or blocked
+Audience: director, architect, developer, QA, support, operations
+Purpose: what decision or understanding it supports
+Evidence: files/classes/configs behind the diagram
+Confidence: high, medium, low, or unknown
+Notation: flowchart, sequence, class/ER-style, matrix, or table
+Output asset: Mermaid source, SVG/PNG image, PDF page, or blocked reason
+```
+
+Required diagrams usually come from actual complexity: multi-site setup, custom OCC, custom itemtypes, B2B authorization, ERP/PIM/payment/tax integrations, custom checkout/pricing/stock/order flows, Solr/CMS customizations, business processes, cronjobs, Backoffice support tooling, deployment topology, or risky OOTB overrides.
+
+### 39.2 Rendered diagram requirement
+
+When the user asks for client-ready, director-ready, demo, deck, or PDF output:
+
+```text
+1. Keep Mermaid or source diagram files for maintainability.
+2. Render each selected diagram to SVG or PNG.
+3. Visually verify that rendered images are non-empty, readable, and not clipped.
+4. Embed the rendered images in the PDF or document.
+5. Include a diagram asset register with source, output path, evidence basis, and QA status.
+6. Put raw Mermaid in an appendix or support folder, not as the only visible diagram.
+```
+
+If rendering tools are unavailable, mark PDF/diagram rendering as blocked and still provide the source report plus clear next steps.

@@ -1,23 +1,24 @@
 ---
 name: sap-commerce-project-analyser
-description: Analyze SAP Commerce projects and their composable storefront or Spartacus counterparts. Use for staged large-repository scans, evidence-based enterprise architecture reports, required diagram portfolios, project comprehension briefs, extension or data-model inventories, B2B or B2C posture, critical-flow and OCC contract analysis, OOTB-vs-custom reviews, integration maps, risk registers, Markdown plus JSON handoffs, change-impact matrices, onboarding briefs, upgrade baselines, or project comparisons.
+description: Analyze SAP Commerce projects and their composable storefront or Spartacus counterparts. Use for staged large-repository scans, evidence-based enterprise architecture reports, client codebase understanding documents, required diagram portfolios, rendered architecture diagrams, project comprehension briefs, extension or data-model inventories, B2B or B2C posture, critical-flow and OCC contract analysis, OOTB-vs-custom reviews, integration maps, risk registers, Markdown/PDF-ready deliverables plus JSON handoffs, change-impact matrices, onboarding briefs, upgrade baselines, or project comparisons.
 ---
 
 # SAP Commerce Project Analyser
 
 ## Overview
 
-Produce a read-only, evidence-based project map that a Commerce engineer can reuse for onboarding, change decisions, and upgrade work. Read the project like an SAP CX architect before diving into isolated classes: understand the business shape, channels, data ownership, integrations, runtime risks, and operability. Treat the backend and storefront as separate roots when the frontend source is not colocated with the Commerce repository.
+Produce a read-only, evidence-based project map and codebase understanding document that a Commerce engineer, SAP CX architect, support lead, or delivery manager can reuse for onboarding, change decisions, and upgrade work. Read the project like an SAP CX architect before diving into isolated classes: understand the business shape, channels, data ownership, integrations, runtime risks, operability, and change safety. Treat the backend and storefront as separate roots when the frontend source is not colocated with the Commerce repository.
 
 ## Large Repo Strategy
 
 SAP Commerce repositories are often too large for a direct full read. Start with a compact quick scan before deep analysis:
 
 1. Index high-signal files and folders: `localextensions.xml`, manifests, build files, custom extension names, `items.xml`, Spring XML, impex/data folders, OCC controllers, cronjobs, process definitions, integration config, storefront `package.json`, Angular config, CMS mappings, and deployment files.
-2. Produce a small evidence ledger with confirmed versions, roots, custom extensions, likely business flows, integration clues, and missing inputs.
+2. Produce a small evidence ledger with confirmed versions, roots, custom extensions, likely business flows, integration clues, diagram candidates, deliverable gaps, and missing inputs.
 3. Deep-dive only into high-signal or high-risk areas: checkout, pricing, stock, order submission, ERP/PIM/payment integrations, B2B authorization, Solr, CMS/SmartEdit, Backoffice operations, and upgrade hotspots.
 4. Build a diagram decision ledger while scanning: which diagrams are required, which are optional, which are blocked by missing evidence, and which repository artifacts support each diagram.
-5. Keep the final report evidence-driven; mark broad areas as `unassessed` instead of reading the whole repo indiscriminately.
+5. Keep a codebase understanding outline as you inspect: business purpose, solution shape, extension map, data ownership, critical flows, integrations, operational posture, risks, and next inspection steps.
+6. Keep the final report evidence-driven; mark broad areas as `unassessed` instead of reading the whole repo indiscriminately.
 
 ## Workflow
 
@@ -30,6 +31,7 @@ SAP Commerce repositories are often too large for a direct full read. Start with
    - Infer the business model, channels, commerce capabilities, SAP CX products, deployment model, and ownership clues from repository evidence.
    - Treat B2B/B2C, marketplace, PunchOut, dealer/distributor, D2C, multi-brand, and multi-country signals as hypotheses until site, data, feature, and integration evidence supports them.
    - Record what is confirmed, inferred, and still unknown before focusing on individual classes.
+   - Frame the client assessment around business capabilities, data ownership, user journeys, external systems, operational support, and upgrade/change risk, not only Java package structure.
 
 3. Establish the version and deployment baseline.
    - Read `manifest.json`, build files, `gradle.properties`, `localextensions.xml`, CCv2 aspects, Java/Node version files, storefront `package.json`, lockfiles, and Angular config when present.
@@ -66,17 +68,26 @@ SAP Commerce repositories are often too large for a direct full read. Start with
    - For each required or blocked diagram, record: purpose, audience, evidence files/classes/configs, confidence, missing evidence, recommended notation (`flowchart`, `sequenceDiagram`, `classDiagram`, or table), and whether to include Mermaid in the report.
    - Generate Mermaid only when the diagram can be made concrete with project labels. Use tables instead of vague diagrams when evidence is too thin. Never invent systems, flows, or ownership that repository evidence does not support.
    - Prefer these notation choices: C4-style flowcharts for context/container/component views, sequence diagrams for login/search/cart/checkout/order/integration flows, class or ER-style Mermaid for custom data model hotspots, flowcharts for Solr/CMS/deployment/operations, and matrices for data ownership or change impact.
+   - When the user asks for a client-ready, director-ready, PDF, deck, or demo artifact, render diagrams to image files such as SVG or PNG and embed those images in the final document. Keep Mermaid source as a support artifact or appendix, not as the only diagram representation.
 
-9. Assess customization and change safety.
+9. Prepare the codebase understanding document.
+   - Structure the document for multiple audiences: executive summary, SAP CX architecture view, developer code map, integration/data ownership view, operations/support view, test/change-safety view, and appendix with evidence.
+   - Explain how the code was analyzed: roots inspected, evidence types reviewed, areas sampled deeply, areas not assessed, and confidence levels.
+   - Include a compact extension-to-responsibility map, custom data model map, OCC/API map, integration inventory, critical journey map, runtime/deployment view, risk register, and change-impact matrix when evidence supports them.
+   - Separate `facts`, `inferences`, `risks`, `recommendations`, and `unknowns`. Do not hide evidence gaps; make them actionable next-inspection items.
+   - For client-facing deliverables, include an artifact register listing the Markdown/source report, rendered diagram images, optional PDF, and JSON handoff. Use the PDF skill or available document/PDF tooling when a polished PDF is requested.
+
+10. Assess customization and change safety.
    - Measure custom item types, Spring overrides, OCC endpoints, frontend component overrides, search value providers, checkout/order customizations, business processes, integration contracts, support tooling, and test gaps.
    - Separate extension of OOTB types from net-new domain models and call out high-risk override hotspots.
    - Produce risks, unknowns, quick wins, and change-impact links for the areas the user may change next.
 
-10. Deliver an evidence-backed report.
+11. Deliver an evidence-backed report.
    - Use [references/report-shape.md](references/report-shape.md) for the report structure.
    - Read the relevant parts of [references/project-analysis-playbook.md](references/project-analysis-playbook.md) for deep inspection checklists, search terms, smell lists, the first-two-days sequence, and the expected architect artifacts.
    - Include a diagram portfolio section that lists required, optional, and blocked diagrams with evidence and confidence before rendering detailed diagrams.
    - Use tables and Mermaid diagrams for extension groups, version baselines, data maps, integration edges, critical flows, OCC contracts, OOTB-vs-custom comparisons, risk registers, change-impact matrices, and the required diagram portfolio when evidence supports them.
+   - For client-ready outputs, render Mermaid diagrams to images, verify the generated images are non-empty/readable, embed them in a PDF-ready report, and keep source Mermaid separately for traceability.
    - Distinguish confirmed findings, inferences, unknowns, unassessed areas, and next files to inspect.
    - End the human-readable Markdown report with a valid JSON handoff for `$sap-commerce-upgrade-analyser`.
 
@@ -134,6 +145,12 @@ Use this JSON shape as the final block when enough evidence exists:
   "custom_hotspots": [],
   "risks": [],
   "diagram_portfolio": [],
+  "deliverables": {
+    "markdown_report": "",
+    "pdf_report": "",
+    "diagram_assets": [],
+    "json_handoff": ""
+  },
   "upgrade_baseline": {
     "high_risk_custom_areas": [],
     "integration_families": [],

@@ -1,13 +1,13 @@
 ---
 name: sap-commerce-upgrade-analyser
-description: Analyze SAP Commerce upgrade impact from a current backend and storefront version to a target version. Use for upgrade analysis that combines public SAP docs, SAP API compatibility/JApiCmp evidence, plus user-provided authorized SAP notes, PDFs, links, and tool artifacts; compares required code, automated-tool, and non-code upgrade activities against a project baseline; covers CCv2 and local/on-prem workflows; classifies applicability and complexity; identifies missing evidence; and produces a Markdown plus JSON upgrade decision brief without implementing code.
+description: Analyze SAP Commerce upgrade impact from a current backend and storefront version to a target version. Use for upgrade analysis that combines public SAP docs, SAP API compatibility/JApiCmp evidence, plus user-provided authorized SAP notes, PDFs, links, and tool artifacts; compares required code, automated-tool, and non-code upgrade activities against a project baseline; covers CCv2 and local/on-prem workflows; classifies applicability and complexity; identifies missing evidence; and produces director-ready PDF/Markdown upgrade decision packs with rendered diagram images plus JSON handoff without implementing code.
 ---
 
 # SAP Commerce Upgrade Analyser
 
 ## Overview
 
-Turn a project baseline and a target version into an upgrade applicability matrix. Keep the result documentation-first: identify what SAP says changed, what the codebase uses, and what the project likely needs before any implementation starts.
+Turn a project baseline and a target version into an upgrade applicability matrix and decision pack. Keep the result documentation-first: identify what SAP says changed, what the codebase uses, what the project likely needs, and what a director or delivery sponsor must decide before any implementation starts.
 
 ## Required Inputs
 
@@ -65,8 +65,22 @@ Before producing the final handoff for backend upgrades, run a targeted source s
    - Separate backend code, storefront code, SAP integration extension pack, CCv2 deployment, local/on-prem operations, system update, data migration, impex, Solr reindexing, media migration, configuration/secrets, smoke testing, rollback, and unknowns.
    - Include an automation/tooling section listing tool artifact path, source document, intended command family, dry-run command, apply command, expected changed file families, and manual review requirements.
    - Include an API compatibility section listing removed APIs, changed signatures, project call sites, replacement API, and whether the implementer must patch, verify locally, or seek a human decision.
-   - Include a recommended upgrade sequence and a short risk register.
+   - Include a recommended upgrade sequence, dependency timeline, decision log, and short risk register.
+   - Include evidence-backed diagrams for upgrade scope, workstream dependencies, target-state/runtime impact, and critical migration flows when the evidence supports them.
+   - For director-ready, demo, client-ready, or PDF requests, render diagrams to SVG/PNG images and export a polished PDF decision pack. The Markdown and JSON remain traceable support artifacts, not the only deliverable.
    - End with a valid JSON handoff for `$sap-commerce-upgrade-implementer`.
+
+## Director-Ready PDF and Diagram Output
+
+When the user needs a demo, director review, steering-committee pack, or client-facing artifact:
+
+- Produce a polished upgrade decision pack, not only a technical Markdown/JSON handoff.
+- Use a clear document flow: title page, executive decision summary, baseline and target, upgrade scope, required workstreams, major risks, timeline/dependency view, automation candidates, non-code activities, open decisions, recommendation, appendix.
+- Render Mermaid or other diagram sources into real image assets such as SVG or PNG before embedding them. Do not leave visible diagrams as raw Mermaid code in the final PDF.
+- Include a diagram asset register with diagram name, source file, rendered image path, evidence basis, and QA status.
+- Use the PDF skill or available document/PDF tooling to create the PDF. Render and inspect representative pages or images before delivery; check that diagrams are readable, not clipped, and not blank.
+- Keep a machine-readable JSON handoff for implementers, but place it in an appendix or separate support artifact. The primary deliverable for directors should be the PDF decision pack.
+- If PDF or diagram rendering is blocked by missing tools, say so explicitly and deliver the Markdown source plus diagram source/assets that can be rendered later.
 
 ## Documentation Discipline
 
@@ -82,9 +96,12 @@ Before producing the final handoff for backend upgrades, run a targeted source s
 
 Do not implement. End with:
 
-1. A prioritized change matrix.
-2. A list of complex decisions for the implementer.
-3. A list of not-needed changes with evidence.
-4. A list of build-error feedback items that must be rechecked project-wide, if any.
-5. A list of missing project inputs or SAP source constraints.
-6. A valid JSON handoff block with no comments, no trailing commas, no secrets, and no private endpoint credentials.
+1. A director-readable executive decision summary.
+2. A prioritized change matrix.
+3. A rendered diagram set when diagrams are included.
+4. A list of complex decisions for the implementer.
+5. A list of not-needed changes with evidence.
+6. A list of build-error feedback items that must be rechecked project-wide, if any.
+7. A list of missing project inputs or SAP source constraints.
+8. A deliverable register showing PDF report, Markdown/source report, diagram image assets, and JSON handoff status.
+9. A valid JSON handoff block with no comments, no trailing commas, no secrets, and no private endpoint credentials.

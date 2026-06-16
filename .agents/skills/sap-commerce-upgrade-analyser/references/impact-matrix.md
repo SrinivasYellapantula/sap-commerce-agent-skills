@@ -2,6 +2,8 @@
 
 Use one row per SAP-documented change or required operational activity, grouped by workstream.
 
+For director-ready, steering-committee, demo, or client-facing outputs, this matrix is the evidence backbone for a polished decision pack. The final PDF should summarize the matrix instead of exposing only raw technical rows.
+
 | Workstream | SAP change or step | Official source | Project evidence | Applicability | Complexity | Reasoning | Suggested action |
 |---|---|---|---|---|---|---|---|
 | Backend | | | | required | straightforward | | |
@@ -33,12 +35,46 @@ Use one row per SAP-documented change or required operational activity, grouped 
 ## Required Summary Tables
 
 1. Source and target baseline.
-2. Required changes by workstream.
-3. Complex changes requiring a decision.
-4. Changes marked not needed and the evidence.
-5. Automation/tooling candidates, including SAP-provided OpenRewrite recipes or migration tools, dry-run commands, apply commands, expected changed files, and manual review requirements.
-6. Non-code upgrade activities, including system update, impex/data migration, Solr reindexing, media migration, environment configuration, deployment sequencing, smoke tests, and rollback.
-7. Test and rollback considerations.
+2. Executive decision summary: proceed / proceed with conditions / defer, with the top reasons.
+3. Required changes by workstream.
+4. Complex changes requiring a decision.
+5. Changes marked not needed and the evidence.
+6. Automation/tooling candidates, including SAP-provided OpenRewrite recipes or migration tools, dry-run commands, apply commands, expected changed files, and manual review requirements.
+7. Non-code upgrade activities, including system update, impex/data migration, Solr reindexing, media migration, environment configuration, deployment sequencing, smoke tests, and rollback.
+8. Test and rollback considerations.
+9. Deliverable register for PDF, Markdown/source report, rendered diagram assets, and JSON handoff.
+
+## Director-Ready Output Shape
+
+Use this structure when a PDF or demo artifact is requested:
+
+1. Title page: client/project, source version, target version, analysis date, evidence scope.
+2. Executive summary: recommendation, confidence, top risks, top decisions, missing evidence.
+3. Baseline and target: backend, storefront, Java/Node/Angular, deployment model, integration scope.
+4. Upgrade scope by workstream: backend, storefront, integrations, deployment, data/system update, Solr/media, testing/rollback.
+5. Required changes matrix: summarized for leadership with an appendix for details.
+6. Automation/tooling plan: OpenRewrite or SAP tools, dry-run first, manual review, expected file families.
+7. API compatibility and code impact: removed/changed APIs, project call sites, required migrations.
+8. Non-code activities: system update, impex, indexing, media, config/secrets, operations, smoke tests.
+9. Timeline/dependency view: sequencing, parallelizable work, decision gates.
+10. Risk register and mitigations.
+11. Recommendation and next steps.
+12. Appendices: source ledger, detailed matrix, not-needed changes, missing evidence, JSON handoff.
+
+## Required Diagram Assets
+
+Create only evidence-backed diagrams. For PDF/director output, render them to SVG or PNG and embed the images.
+
+| Diagram | Purpose | Recommended Notation | Required When | Output |
+|---|---|---|---|---|
+| Upgrade scope map | Show affected platform areas and workstreams | flowchart | Any multi-workstream upgrade | SVG/PNG |
+| Source-to-target baseline | Show current and target runtime/application versions | flowchart or table image | Always for director-ready output | SVG/PNG or styled table |
+| Workstream dependency timeline | Show sequencing and decision gates | flowchart or timeline | Moderate/complex upgrades | SVG/PNG |
+| API compatibility impact map | Show SAP API changes to project call sites | flowchart/table | API/JApiCmp findings exist | SVG/PNG or styled table |
+| Auth/security migration flow | Show OAuth/Spring Security changes | sequence/flowchart | Auth/security changes apply | SVG/PNG |
+| Deployment/update runbook flow | Show dry-run, update, smoke, rollback stages | flowchart | CCv2/local operations are in scope | SVG/PNG |
+
+Raw Mermaid may be included in support artifacts, but the final PDF should contain rendered images, not Mermaid code blocks as the visible diagrams.
 
 ## JSON Handoff
 
@@ -71,6 +107,12 @@ End with a valid JSON block for the implementer:
     "rollback": []
   },
   "missing_evidence": [],
-  "implementation_inputs": []
+  "implementation_inputs": [],
+  "presentation_outputs": {
+    "pdf_report": "",
+    "markdown_source": "",
+    "diagram_assets": [],
+    "json_handoff": ""
+  }
 }
 ```
