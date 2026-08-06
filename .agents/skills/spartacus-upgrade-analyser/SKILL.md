@@ -17,6 +17,12 @@ Turn a storefront codebase and target SAP Commerce / Composable Storefront versi
 - Use current official SAP Help and official SAP package/compatibility documentation for every run. Use user-provided SAP Help PDFs, SAP KBAs, exported SAP Notes, or local documentation folders as authorized inputs for that run; do not copy proprietary SAP text into reusable public skill files.
 - If SAP for Me, SAP Notes, or customer-only KBAs are needed, ask the user to provide authorized exports. Never ask for, store, or expose SAP credentials, cookies, or tokens.
 
+## Backend Update-Line Reference Routing
+
+- When the backend path crosses `2211-jdk21.11` through `2211-jdk21.15`, read [references/2211-jdk21-11-to-15.md](references/2211-jdk21-11-to-15.md) before assessing frontend integration impact.
+- Do not infer a Composable Storefront package target from SAP Commerce SmartEdit's Angular/Node/npm tables. Maintain separate baselines and matrices for external storefront and custom SmartEdit code.
+- Preserve SAP's exact preview and release labels, especially the `2211-jdk21.12` preview/rollout references associated with the .14 line.
+
 ## Workflow
 
 1. Reconfirm the frontend baseline.
@@ -55,6 +61,8 @@ Turn a storefront codebase and target SAP Commerce / Composable Storefront versi
 - Spartacus API scan: imports from `@spartacus/*`, `@cx-spartacus/*`, custom extensions of Spartacus classes, custom providers, `ConfigModule.withConfig`, `provideConfig`, routing config, feature toggles, CMS mappings, and converter/normalizer/custom adapter classes.
 - Angular migration scan: deprecated Angular APIs, module/provider patterns affected by the target Angular version, RxJS call shapes, TypeScript strictness, Sass/build builder changes, and testing builder changes.
 - Auth/OCC scan: OAuth client config, token flow assumptions, interceptors, OCC base URL/webroot, `/authorizationserver` and `/resourceserver` expectations, CORS/origin assumptions, backend endpoint contract changes, custom login routes, authorization request parameters, `ui_locales`, base-site/language propagation, and compatibility with backend `OAuthClientDetails.loginPageUri` placeholders.
+- 2211-jdk21.11-.15 coupled scan: public redirect host and cookie scope behind CDN/proxy; built-in and custom login-page placeholders; affected wishlist calls using `sortId`; effective rollout state of wishlist and B2B organization endpoints; and backend startup readiness after Spring 6.2.19 duplicate-registration behavior is restored.
+- SmartEdit scope scan: when custom SmartEdit code is present, analyse its Angular 21/Fundamental NGX/Node/pnpm/TypeScript/build migration separately from the external storefront and use the SAP Commerce update-line library tables only for SmartEdit.
 - Runtime feedback scan: when a build/runtime error appears, convert the failing symbol, package, route, DI token, provider, or endpoint into a project-wide scan pattern and add it to the residual matrix.
 
 ## Output Contract

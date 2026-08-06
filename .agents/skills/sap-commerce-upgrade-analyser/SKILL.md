@@ -18,6 +18,12 @@ Turn a project baseline and a target version into an upgrade applicability matri
 - Use public SAP Help documentation by default. If SAP Partner Portal, SAP for Me, SAP Notes, or customer-only material is needed, ask the user to provide authorized PDFs, exported pages, local documentation folders, or links. Never ask for, store, or expose SAP credentials, cookies, tokens, or partner-only documents in this public skill repo.
 - Accept optional authorized tool artifacts for the current run, such as SAP-provided OpenRewrite recipe JARs, migration scripts, or tool instructions. Record only file paths, checksums when useful, and source documents; do not commit the artifacts into this public skill repo.
 
+## Update-Line Reference Routing
+
+- When the path crosses `2211-jdk21.11` through `2211-jdk21.15`, read [references/2211-jdk21-11-to-15.md](references/2211-jdk21-11-to-15.md) before building the ledger or scan plan.
+- Treat that file as a routing and hotspot reference, not frozen truth. Re-open the live release roots and relevant child pages for the current run, and preserve SAP's exact release-versus-preview labels.
+- Keep platform, bundled SmartEdit/npm ancillary, Accelerator storefront, and external Composable Storefront evidence separate. A SmartEdit Angular version is not a Composable Storefront target version.
+
 ## Workflow
 
 1. Reconfirm the baseline.
@@ -51,6 +57,11 @@ Before producing the final handoff for backend upgrades, run a targeted source s
 - Search custom Java and Spring XML for removed classes, deprecated-for-removal classes, changed method signatures, removed overloads, and replacement classes named in SAP API reports.
 - Search for direct calls to SAP facades/services whose signatures changed, not only imports. For 2211 JDK21 paths, explicitly scan for old `OutboundServiceFacade.send(payload, integrationObjectCode, destinationId)` calls and flag migration to `SyncParameters`.
 - Search custom integration modules for SAP outbound/inbound service overrides, custom integration objects, consumed destinations, and SAP CPI/SCPI quote/order/customer service subclasses.
+- For paths crossing `2211-jdk21.14`, scan all custom extensions and Spring XML for Charon/RxJava usage: `com.hybris.charon`, `@Http`, `@Control`, `@OAuth`, `HttpClientFactoryBean`, `Charon.from`, and `rx.Observable`. Include OAuth, retry, concurrency, proxy, SSL/trust-store, multipart/file, exception, property-resolution, and caller-return-type behavior in the residual matrix.
+- For paths crossing `2211-jdk21.14`, run the target API report against every custom use of Integration API modules, including `integrationservices`, `odata2services`, `inboundservices`, `outboundsync`, `outboundservices`, `webhookservices`, and `integrationbackoffice`; the release contains broad removals and moves that a single-symbol scan cannot cover.
+- For paths crossing `2211-jdk21.15`, scan classes registered both by component scanning and explicit Spring XML under different bean names, especially controllers with overlapping request mappings. Flag duplicate registration as a startup risk even when earlier 6.2.x targets appeared to tolerate it.
+- For paths crossing `2211-jdk21.11`, inspect authorizationserver forwarded-header behavior, CDN/proxy cookie rewriting, login-page placeholder providers, and custom Accelerator production filters excluding `wro_addons.xml`.
+- For paths crossing `2211-jdk21.13`, inspect custom `JDBCInterceptorFactory` implementations and the `createJDBCInterceptor(Tenant, String)` overload without assuming a new override is required.
 - When a compiler/build error from an implementation run reveals a missed SAP API migration, convert the failing symbol or method signature into a project-wide scan pattern and update the analysis/handoff. Do not treat the first failing file as the full scope.
 - When an impex import error reveals a missed data migration, convert the failing value, attribute, and line into a project-wide impex header/type-system scan. Example: `pk has wrong format` for OAuth values such as `none` or `client_secret_post` usually means an enum/item collection was imported without a qualifier such as `(code)`.
 - When a runtime startup error mentions `MvcRequestMatcher`, `HandlerMappingIntrospectorFactoryBean`, or missing `mvcHandlerMappingIntrospector`, convert it into a project-wide Spring Security XML scan for pattern-based `<http>` / `<security:http>` blocks without explicit `request-matcher`.

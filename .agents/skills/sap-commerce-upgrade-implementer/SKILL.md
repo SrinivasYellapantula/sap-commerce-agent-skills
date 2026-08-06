@@ -60,6 +60,12 @@ Convert an approved upgrade analysis into an implementation decision pack first,
 5. Keep rejected and deferred approaches visible in the pack so the reasoning survives project switching.
 6. After any migration-tool dry-run or apply, create a concrete residual patch list. Do not leave SAP Help items as broad workstreams when the required file-level changes can be inferred.
 
+## Update-Line Reference Routing
+
+- When the approved path crosses `2211-jdk21.11` through `2211-jdk21.15`, read [references/2211-jdk21-11-to-15-implementation.md](references/2211-jdk21-11-to-15-implementation.md) and the analyser handoff's live source ledger before preparing the decision pack.
+- Keep the cumulative update-line work in separate approval items: authorizationserver/CDN, Accelerator/operations, JDBC interceptor regression, Hibernate/Data Hub, API/web/data migrations, Charon, feature rollout, SmartEdit, and Spring duplicate-registration cleanup.
+- Do not turn SAP-supplied library updates into manual vendoring work. Patch project pins/configuration and custom compatibility issues; verify the target distribution supplies the documented libraries.
+
 ## SAP Help And API Compatibility Sweep
 
 Before declaring an implementation plan complete for an SAP Commerce backend upgrade, perform this sweep even when the analyser output, source ledger, and OpenRewrite output look complete:
@@ -88,6 +94,9 @@ For 2211 JDK21 update lines, explicitly inspect these patterns and do not assume
 - SAP outboundservices API: search for old `OutboundServiceFacade.send(payload, integrationObjectCode, destinationId)` calls and custom SAP CPI/SCPI outbound service subclasses. For targets where the overload is removed, build `SyncParameters` with payload object, integration object, and consumed destination, then call `send(syncParameters)`.
 - Custom SAP subclasses: any custom class extending an SAP class, overriding protected SAP methods, or injecting an SAP bean by alias must be revalidated against the target source/API report before claiming the upgrade patch is complete.
 - Generated and inactive modules: compile failures can hide in inactive custom extensions, autoloaded vendor folders, or generated metadata skipped by OpenRewrite. Reconcile `localextensions.xml`, autoload folders, and build output with the actual implementation scope.
+- Charon deprecation/removal: inventory and decision-pack Charon interfaces, Spring factories, RxJava callers, OAuth filters, retries, concurrency, proxies, SSL/trust stores, file uploads, and exception behavior. For .14/.15, do not claim the optional migration complete after annotation replacement alone; for a target where SAP removes Charon, treat all remaining usages as blockers.
+- Spring 6.2.19 duplicate registrations: scan component-scanned classes also declared in Spring XML under different bean names. Resolve overlapping controller mappings and include a startup/request-mapping verification gate.
+- Wishlist and rollout contracts: patch `sort` to `sortId` only for the affected wishlist operations, and change manifest endpoint restrictions only after an explicit rollout decision for wishlist and B2B organization endpoints.
 
 ## JDK21 / Spring 6 Upgrade Guardrails
 
