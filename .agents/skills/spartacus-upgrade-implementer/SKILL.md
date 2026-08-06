@@ -62,6 +62,12 @@ Convert an approved `$spartacus-upgrade-analyser` handoff into a frontend implem
 4. After each approved patch, update the implementation status.
    - Record changed files, commands run, skipped verification, residual risks, and next approval item.
 
+## Backend Update-Line Reference Routing
+
+- When the backend crosses `2211-jdk21.11` through `2211-jdk21.15`, read [references/2211-jdk21-11-to-15-implementation.md](references/2211-jdk21-11-to-15-implementation.md) before preparing frontend patches.
+- Keep backend/operations dependencies visible and out of frontend edits: forwarded-header enablement, CDN cookie rewriting, OAuth client Impex, placeholder-provider beans, allowed hosts, endpoint rollout manifests, and duplicate backend controller registration.
+- Keep SmartEdit Angular 21 work separate from the Composable Storefront dependency migration. Never use the SmartEdit library table as input to `ng update` or package-manager changes for the storefront.
+
 ## JDK21 / 2211 Backend Integration Guardrails
 
 - OAuth/Auth: align browser OAuth with the upgraded backend authorizationserver/resourceserver model. Do not preserve implicit/password assumptions for browser clients. Treat PKCE/public-client changes as frontend/backend coupled decisions.
@@ -70,6 +76,8 @@ Convert an approved `$spartacus-upgrade-analyser` handoff into a frontend implem
 - Custom OCC contracts: scan custom adapters/connectors and generated DTO assumptions for backend route or response changes. Runtime HTTP failures must become project-wide connector/adapter scans.
 - CMS/SmartEdit: verify component mappings, page slots, navigation, preview config, and SmartEdit integration after package migration.
 - SSR/build: verify server bundle, prerender, browser-only API guards, asset paths, and deployment build commands separately from local dev-server success.
+- Wishlist/rollout: change `sort` to `sortId` only in proven affected wishlist connectors and align tests with the backend contract. Require a backend decision for wishlist and B2B endpoint enablement instead of adding UI workarounds for intentionally disabled endpoints.
+- Authorization redirects: test `ui_locales`, `ctx`, custom placeholder parameters, public host/port/path, session-cookie scope, multisite callbacks, and logout/refresh behavior as one coupled browser flow.
 
 ## Known Frontend Hotspot Scans
 
